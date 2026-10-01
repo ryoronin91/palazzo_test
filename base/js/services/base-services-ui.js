@@ -1,8 +1,6 @@
 // ============================================================
 // PALAZZO ETERNO
 // BASE SERVICES - UI
-//
-// Popup, requisiti, zaino e countdown.
 // ============================================================
 
 (() => {
@@ -15,158 +13,81 @@
     let currentConfig = null;
 
 
-    function escapeHtml(
-        value
-    ) {
-        return String(
-            value ?? ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
     }
 
 
-    function formatDuration(
-        milliseconds
-    ) {
-        const totalSeconds =
-            Math.max(
-                0,
-                Math.ceil(
-                    milliseconds /
-                    1000
-                )
-            );
+    function formatDuration(milliseconds) {
+        const totalSeconds = Math.max(
+            0,
+            Math.ceil(milliseconds / 1000)
+        );
 
         const hours =
-            Math.floor(
-                totalSeconds /
-                3600
-            );
+            Math.floor(totalSeconds / 3600);
 
         const minutes =
             Math.floor(
-                (
-                    totalSeconds %
-                    3600
-                ) /
-                60
+                (totalSeconds % 3600) / 60
             );
 
         const seconds =
-            totalSeconds %
-            60;
-
-        if (
-            hours > 0
-        ) {
-            return (
-                String(
-                    hours
-                ).padStart(
-                    2,
-                    "0"
-                ) +
-                ":" +
-                String(
-                    minutes
-                ).padStart(
-                    2,
-                    "0"
-                ) +
-                ":" +
-                String(
-                    seconds
-                ).padStart(
-                    2,
-                    "0"
-                )
-            );
-        }
+            totalSeconds % 60;
 
         return (
-            String(
-                minutes
-            ).padStart(
-                2,
-                "0"
-            ) +
+            String(hours).padStart(2, "0") +
             ":" +
-            String(
-                seconds
-            ).padStart(
-                2,
-                "0"
-            )
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0")
         );
     }
 
 
-    function getServerOffset(
-    payload
-) {
-    if (!payload) {
-        return 0;
-    }
+    function getServerOffset(payload) {
+        if (!payload) {
+            return 0;
+        }
 
-    if (
-        Number.isFinite(
-            payload._serverOffsetMs
-        )
-    ) {
+        if (
+            Number.isFinite(
+                payload._serverOffsetMs
+            )
+        ) {
+            return payload._serverOffsetMs;
+        }
+
+        const serverNow =
+            Date.parse(
+                payload.server_now
+            );
+
+        if (
+            !Number.isFinite(
+                serverNow
+            )
+        ) {
+            payload._serverOffsetMs = 0;
+            return 0;
+        }
+
+        payload._serverOffsetMs =
+            serverNow - Date.now();
+
         return payload._serverOffsetMs;
     }
 
-    const serverNow =
-        Date.parse(
-            payload.server_now
-        );
 
-    if (
-        !Number.isFinite(
-            serverNow
-        )
-    ) {
-        payload._serverOffsetMs = 0;
-
-        return 0;
-    }
-
-    payload._serverOffsetMs =
-        serverNow - Date.now();
-
-    return payload._serverOffsetMs;
-}
-
-    }
-
-
-    function getEffectiveNow(
-        payload
-    ) {
+    function getEffectiveNow(payload) {
         return (
             Date.now() +
-            getServerOffset(
-                payload
-            )
+            getServerOffset(payload)
         );
     }
 
@@ -176,14 +97,10 @@
         targetDate
     ) {
         const target =
-            Date.parse(
-                targetDate
-            );
+            Date.parse(targetDate);
 
         if (
-            !Number.isFinite(
-                target
-            )
+            !Number.isFinite(target)
         ) {
             return 0;
         }
@@ -191,16 +108,12 @@
         return Math.max(
             0,
             target -
-            getEffectiveNow(
-                payload
-            )
+            getEffectiveNow(payload)
         );
     }
 
 
-    function getGoldRequirement(
-        payload
-    ) {
+    function getGoldRequirement(payload) {
         return (
             payload
                 ?.requirements
@@ -214,46 +127,35 @@
     }
 
 
-    function getMaintenanceInfo(
-        payload
-    ) {
+    function getMaintenanceInfo(payload) {
         const service =
-            payload
-                ?.service ||
-            {};
+            payload?.service || {};
 
         const goldRequirement =
-            getGoldRequirement(
-                payload
-            );
+            getGoldRequirement(payload);
 
         const totalGold =
             Number(
                 goldRequirement
-                    ?.required_quantity ||
-                0
+                    ?.required_quantity || 0
             );
 
         const totalSeconds =
             Number(
                 service
-                    .maintenance_seconds ||
-                0
+                    .maintenance_seconds || 0
             );
 
         const remainingMs =
             getRemainingMs(
                 payload,
-                service
-                    .maintenance_until
+                service.maintenance_until
             );
 
         const remainingSeconds =
-            remainingMs /
-            1000;
+            remainingMs / 1000;
 
-        let equivalentGold =
-            0;
+        let equivalentGold = 0;
 
         if (
             totalGold > 0 &&
@@ -280,9 +182,7 @@
 
 
     function createShell() {
-        if (
-            overlay
-        ) {
+        if (overlay) {
             return;
         }
 
@@ -317,21 +217,17 @@
             </section>
         `;
 
-
         overlay.addEventListener(
             "click",
             event => {
-
                 if (
                     event.target ===
                     overlay
                 ) {
                     close();
                 }
-
             }
         );
-
 
         overlay
             .querySelector(
@@ -341,7 +237,6 @@
                 "click",
                 close
             );
-
 
         document.body.appendChild(
             overlay
@@ -355,22 +250,19 @@
         const required =
             Number(
                 requirement
-                    .required_quantity ||
-                0
+                    .required_quantity || 0
             );
 
         const contributed =
             Number(
                 requirement
-                    .contributed_quantity ||
-                0
+                    .contributed_quantity || 0
             );
 
         const inventoryQuantity =
             Number(
                 requirement
-                    .inventory_quantity ||
-                0
+                    .inventory_quantity || 0
             );
 
         const remaining =
@@ -396,15 +288,12 @@
             remaining <= 0;
 
         const itemName =
-            requirement
-                .item_name ||
-            requirement
-                .item_id;
+            requirement.item_name ||
+            requirement.item_id;
 
         const itemId =
             escapeHtml(
-                requirement
-                    .item_id
+                requirement.item_id
             );
 
         return `
@@ -419,37 +308,23 @@
                 <div
                     class="base-service-requirement-head"
                 >
-
                     <strong>
-                        ${escapeHtml(
-                            itemName
-                        )}
+                        ${escapeHtml(itemName)}
                     </strong>
 
                     <span>
-                        ${contributed}
-                        /
-                        ${required}
-
-                        ${
-                            complete
-                                ? " ✓"
-                                : ""
-                        }
+                        ${contributed} / ${required}
+                        ${complete ? " ✓" : ""}
                     </span>
-
                 </div>
 
 
                 <div
                     class="base-service-progress"
-                    aria-hidden="true"
                 >
-
                     <span
                         style="width:${percent}%"
                     ></span>
-
                 </div>
 
 
@@ -464,7 +339,6 @@
                         max="${remaining}"
                         value="1"
                         inputmode="numeric"
-                        placeholder="Quantità da aggiungere"
                         data-item-id="${itemId}"
                     >
 
@@ -499,11 +373,9 @@
     ) {
         const requirements =
             Array.isArray(
-                payload
-                    ?.requirements
+                payload?.requirements
             )
-                ? payload
-                    .requirements
+                ? payload.requirements
                 : [];
 
         return `
@@ -513,22 +385,18 @@
                 DA COSTRUIRE
             </div>
 
-
             <p
                 class="base-service-description"
             >
                 ${escapeHtml(
-                    config
-                        ?.description ||
+                    config?.description ||
                     "Questo servizio deve ancora essere costruito."
                 )}
             </p>
 
-
             <h3>
                 Risorse necessarie
             </h3>
-
 
             <div
                 class="base-service-requirements"
@@ -542,7 +410,6 @@
                 }
             </div>
 
-
             <p
                 class="base-service-note"
             >
@@ -551,7 +418,6 @@
                 Quando tutti i requisiti saranno completati,
                 inizierà l'evocazione del Runografo.
             </p>
-
 
             <p
                 class="base-service-note"
@@ -584,26 +450,21 @@
                 IN COSTRUZIONE
             </div>
 
-
             <div
                 class="base-service-countdown-block"
             >
-
                 <span>
                     Tempo restante
                 </span>
 
                 <strong
                     class="base-service-live-countdown"
-                    data-target="construction"
                 >
                     ${formatDuration(
                         remaining
                     )}
                 </strong>
-
             </div>
-
 
             <p
                 class="base-service-note"
@@ -632,26 +493,21 @@
                 ATTIVO
             </div>
 
-
             <div
                 class="base-service-countdown-block"
             >
-
                 <span>
                     Autonomia restante
                 </span>
 
                 <strong
                     class="base-service-live-countdown"
-                    data-target="maintenance"
                 >
                     ${formatDuration(
                         info.remainingMs
                     )}
                 </strong>
-
             </div>
-
 
             <div
                 class="base-service-reserve"
@@ -669,20 +525,14 @@
                 monete
             </div>
 
-
             <div
                 class="base-service-maintenance-box"
             >
-
-                <label
-                    for="base-service-maintenance-quantity"
-                >
+                <label>
                     Aggiungi monete alla riserva
                 </label>
 
-
                 <input
-                    id="base-service-maintenance-quantity"
                     class="base-service-quantity"
                     type="number"
                     min="1"
@@ -691,7 +541,6 @@
                     data-item-id="moneta_oro"
                 >
 
-
                 <button
                     type="button"
                     class="base-service-contribute"
@@ -699,9 +548,7 @@
                 >
                     VERSA MONETE
                 </button>
-
             </div>
-
 
             <p
                 class="base-service-warning"
@@ -718,21 +565,16 @@
         message,
         isError = false
     ) {
-        if (
-            !overlay
-        ) {
+        if (!overlay) {
             return;
         }
 
         let element =
-            overlay
-                .querySelector(
-                    ".base-service-feedback"
-                );
+            overlay.querySelector(
+                ".base-service-feedback"
+            );
 
-        if (
-            !element
-        ) {
+        if (!element) {
             element =
                 document.createElement(
                     "div"
@@ -753,30 +595,20 @@
         element.textContent =
             message || "";
 
-        element
-            .classList
-            .toggle(
-                "is-error",
-                Boolean(
-                    isError
-                )
-            );
+        element.classList.toggle(
+            "is-error",
+            Boolean(isError)
+        );
 
-        element
-            .classList
-            .toggle(
-                "is-visible",
-                Boolean(
-                    message
-                )
-            );
+        element.classList.toggle(
+            "is-visible",
+            Boolean(message)
+        );
     }
 
 
     function bindContributionButtons() {
-        if (
-            !overlay
-        ) {
+        if (!overlay) {
             return;
         }
 
@@ -792,8 +624,7 @@
                         async () => {
 
                             const itemId =
-                                button
-                                    .dataset
+                                button.dataset
                                     .itemId;
 
                             const inputs =
@@ -802,12 +633,10 @@
                                         ".base-service-quantity"
                                     );
 
-                            let input =
-                                null;
+                            let input = null;
 
                             inputs.forEach(
                                 candidate => {
-
                                     if (
                                         candidate
                                             .dataset
@@ -817,14 +646,12 @@
                                         input =
                                             candidate;
                                     }
-
                                 }
                             );
 
                             const quantity =
                                 Number(
-                                    input
-                                        ?.value
+                                    input?.value
                                 );
 
                             if (
@@ -849,7 +676,6 @@
                             );
 
                             try {
-
                                 if (
                                     typeof currentConfig
                                         ?.onContribute !==
@@ -898,10 +724,8 @@
                                 button.disabled =
                                     false;
                             }
-
                         }
                     );
-
                 }
             );
     }
@@ -917,15 +741,13 @@
         }
 
         const content =
-            overlay
-                .querySelector(
-                    ".base-service-content"
-                );
+            overlay.querySelector(
+                ".base-service-content"
+            );
 
         const service =
             currentPayload
-                .service ||
-            {};
+                .service || {};
 
         const status =
             service.status ||
@@ -959,12 +781,10 @@
                 );
         }
 
-
         content.innerHTML = `
             <header
                 class="base-service-header"
             >
-
                 <div>
 
                     <span
@@ -984,12 +804,10 @@
                     </h2>
 
                 </div>
-
             </header>
 
             ${body}
         `;
-
 
         bindContributionButtons();
 
@@ -1007,14 +825,12 @@
 
         const service =
             currentPayload
-                .service ||
-            {};
+                .service || {};
 
         const countdown =
-            overlay
-                .querySelector(
-                    ".base-service-live-countdown"
-                );
+            overlay.querySelector(
+                ".base-service-live-countdown"
+            );
 
 
         if (
@@ -1066,10 +882,9 @@
             }
 
             const reserve =
-                overlay
-                    .querySelector(
-                        ".base-service-live-reserve"
-                    );
+                overlay.querySelector(
+                    ".base-service-live-reserve"
+                );
 
             if (
                 reserve
@@ -1105,7 +920,6 @@
         countdownTimer =
             setInterval(
                 () => {
-
                     countdownTick()
                         .catch(
                             error => {
@@ -1115,7 +929,6 @@
                                 );
                             }
                         );
-
                 },
                 1000
             );
@@ -1133,37 +946,29 @@
             ...config,
 
             onContribute:
-                options
-                    .onContribute
+                options.onContribute
         };
 
         currentPayload =
             payload;
 
         refreshCallback =
-            options
-                .onRefresh ||
+            options.onRefresh ||
             null;
 
-        overlay
-            .classList
-            .add(
-                "is-open"
-            );
+        overlay.classList.add(
+            "is-open"
+        );
 
-        document.body
-            .classList
-            .add(
-                "base-service-modal-open"
-            );
+        document.body.classList.add(
+            "base-service-modal-open"
+        );
 
         renderCurrent();
     }
 
 
-    function update(
-        payload
-    ) {
+    function update(payload) {
         if (
             !payload
         ) {
@@ -1192,17 +997,13 @@
             return;
         }
 
-        overlay
-            .classList
-            .remove(
-                "is-open"
-            );
+        overlay.classList.remove(
+            "is-open"
+        );
 
-        document.body
-            .classList
-            .remove(
-                "base-service-modal-open"
-            );
+        document.body.classList.remove(
+            "base-service-modal-open"
+        );
 
         if (
             countdownTimer
