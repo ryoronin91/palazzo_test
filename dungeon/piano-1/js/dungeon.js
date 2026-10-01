@@ -873,11 +873,21 @@ function renderDungeonLeaderboard(
                                             "Boss sconfitto"
                                         );
 
+                                    const rawIconPath =
+                                        badge?.icon_path ||
+                                        "";
+
+                                    const resolvedIconPath =
+
+                                    rawIconPath.startsWith("immagini/")
+                                            ? '../../${rawIconPath}'
+                                            : rawIconPath;
+
                                     const iconPath =
                                         escapeDungeonLeaderboardHtml(
-                                            badge?.icon_path ||
-                                            ""
+                                            resolvedIconPath
                                         );
+                            
 
                                     const floorNumber =
                                         Number(
