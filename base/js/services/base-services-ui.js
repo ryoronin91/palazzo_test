@@ -1,11 +1,3 @@
-// ============================================================
-// PALAZZO ETERNO
-// BASE SERVICES - UI
-//
-// Popup, barre di progresso e countdown.
-// Non accede direttamente a Supabase.
-// ============================================================
-
 (() => {
     "use strict";
 
@@ -60,13 +52,15 @@
 
     function getServerOffset(payload) {
         const serverNow =
-            Date.parse(payload?.server_now);
+            Date.parse(
+                payload?.server_now
+            );
 
-        if (!Number.isFinite(serverNow)) {
-            return 0;
-        }
-
-        return serverNow - Date.now();
+        return Number.isFinite(
+            serverNow
+        )
+            ? serverNow - Date.now()
+            : 0;
     }
 
     function getEffectiveNow(payload) {
@@ -83,17 +77,22 @@
         const target =
             Date.parse(targetDate);
 
-        if (!Number.isFinite(target)) {
+        if (
+            !Number.isFinite(target)
+        ) {
             return 0;
         }
 
         return Math.max(
             0,
-            target - getEffectiveNow(payload)
+            target -
+            getEffectiveNow(payload)
         );
     }
 
-    function getGoldRequirement(payload) {
+    function getGoldRequirement(
+        payload
+    ) {
         return (
             payload?.requirements?.find(
                 item =>
@@ -103,12 +102,16 @@
         );
     }
 
-    function getMaintenanceInfo(payload) {
+    function getMaintenanceInfo(
+        payload
+    ) {
         const service =
             payload?.service || {};
 
         const goldRequirement =
-            getGoldRequirement(payload);
+            getGoldRequirement(
+                payload
+            );
 
         const totalGold =
             Number(
@@ -125,7 +128,8 @@
         const remainingMs =
             getRemainingMs(
                 payload,
-                service.maintenance_until
+                service
+                    .maintenance_until
             );
 
         const remainingSeconds =
@@ -147,6 +151,7 @@
 
         return {
             remainingMs,
+
             equivalentGold:
                 Math.max(
                     0,
@@ -161,7 +166,9 @@
         }
 
         overlay =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         overlay.className =
             "base-service-overlay";
@@ -173,27 +180,33 @@
                 aria-modal="true"
                 aria-labelledby="base-service-title"
             >
+
                 <button
                     type="button"
                     class="base-service-close"
                     aria-label="Chiudi"
-                >×</button>
+                >
+                    ×
+                </button>
 
                 <div
                     class="base-service-content"
                 ></div>
+
             </section>
         `;
 
         overlay.addEventListener(
             "click",
             event => {
+
                 if (
                     event.target ===
                     overlay
                 ) {
                     close();
                 }
+
             }
         );
 
@@ -229,7 +242,8 @@
         const remaining =
             Math.max(
                 0,
-                required - contributed
+                required -
+                contributed
             );
 
         const percent =
@@ -239,7 +253,8 @@
                     (
                         contributed /
                         required
-                    ) * 100
+                    ) *
+                    100
                 )
                 : 0;
 
@@ -250,6 +265,11 @@
             requirement.item_name ||
             requirement.item_id;
 
+        const itemId =
+            escapeHtml(
+                requirement.item_id
+            );
+
         return `
             <div
                 class="base-service-requirement ${
@@ -258,17 +278,22 @@
                         : ""
                 }"
             >
+
                 <div
                     class="base-service-requirement-head"
                 >
+
                     <strong>
-                        ${escapeHtml(itemName)}
+                        ${escapeHtml(
+                            itemName
+                        )}
                     </strong>
 
                     <span>
                         ${contributed} / ${required}
                         ${complete ? " ✓" : ""}
                     </span>
+
                 </div>
 
                 <div
@@ -287,33 +312,29 @@
                     <div
                         class="base-service-contribution-row"
                     >
+
                         <input
                             class="base-service-quantity"
                             type="number"
                             min="1"
                             max="${remaining}"
-                            value="${Math.min(
-                                1,
-                                remaining
-                            )}"
+                            value="1"
                             inputmode="numeric"
-                            data-item-id="${escapeHtml(
-                                requirement.item_id
-                            )}"
+                            data-item-id="${itemId}"
                         >
 
                         <button
                             type="button"
                             class="base-service-contribute"
-                            data-item-id="${escapeHtml(
-                                requirement.item_id
-                            )}"
+                            data-item-id="${itemId}"
                         >
                             CONTRIBUISCI
                         </button>
+
                     </div>
                 `
                 }
+
             </div>
         `;
     }
@@ -336,14 +357,18 @@
                 DA COSTRUIRE
             </div>
 
-            <p class="base-service-description">
+            <p
+                class="base-service-description"
+            >
                 ${escapeHtml(
                     config?.description ||
                     "Questo servizio deve ancora essere costruito."
                 )}
             </p>
 
-            <h3>Risorse necessarie</h3>
+            <h3>
+                Risorse necessarie
+            </h3>
 
             <div
                 class="base-service-requirements"
@@ -357,7 +382,9 @@
                 }
             </div>
 
-            <p class="base-service-note">
+            <p
+                class="base-service-note"
+            >
                 Tutti i giocatori possono contribuire.
                 Quando ogni requisito sarà completo,
                 inizierà automaticamente la costruzione.
@@ -385,7 +412,10 @@
             <div
                 class="base-service-countdown-block"
             >
-                <span>Tempo restante</span>
+
+                <span>
+                    Tempo restante
+                </span>
 
                 <strong
                     class="base-service-live-countdown"
@@ -395,12 +425,16 @@
                         remaining
                     )}
                 </strong>
+
             </div>
 
-            <p class="base-service-note">
-                Al termine della costruzione il servizio
-                diventerà operativo e inizierà a consumare
-                la propria riserva di monete.
+            <p
+                class="base-service-note"
+            >
+                Al termine della costruzione
+                il servizio diventerà operativo
+                e inizierà a consumare la propria
+                riserva di monete.
             </p>
         `;
     }
@@ -423,7 +457,10 @@
             <div
                 class="base-service-countdown-block"
             >
-                <span>Autonomia restante</span>
+
+                <span>
+                    Autonomia restante
+                </span>
 
                 <strong
                     class="base-service-live-countdown"
@@ -433,12 +470,14 @@
                         info.remainingMs
                     )}
                 </strong>
+
             </div>
 
             <div
                 class="base-service-reserve"
             >
                 Riserva equivalente:
+
                 <strong
                     class="base-service-live-reserve"
                 >
@@ -446,12 +485,14 @@
                         info.equivalentGold
                     )}
                 </strong>
+
                 monete
             </div>
 
             <div
                 class="base-service-maintenance-box"
             >
+
                 <label
                     for="base-service-maintenance-quantity"
                 >
@@ -461,6 +502,7 @@
                 <div
                     class="base-service-contribution-row"
                 >
+
                     <input
                         id="base-service-maintenance-quantity"
                         class="base-service-quantity"
@@ -478,113 +520,19 @@
                     >
                         VERSA MONETE
                     </button>
+
                 </div>
+
             </div>
 
-            <p class="base-service-warning">
-                Se la riserva arriva a zero il servizio
-                viene perso e dovrà essere ricostruito
-                da zero.
+            <p
+                class="base-service-warning"
+            >
+                Se la riserva arriva a zero
+                il servizio viene perso e dovrà
+                essere ricostruito da zero.
             </p>
         `;
-    }
-
-    function bindContributionButtons() {
-        if (!overlay) {
-            return;
-        }
-
-        overlay
-            .querySelectorAll(
-                ".base-service-contribute"
-            )
-            .forEach(button => {
-                button.addEventListener(
-                    "click",
-                    async () => {
-                        const itemId =
-                            button.dataset
-                                .itemId;
-
-                        const input =
-                            overlay.querySelector(
-                                `.base-service-quantity[data-item-id="${CSS.escape(
-                                    itemId
-                                )}"]`
-                            );
-
-                        const quantity =
-                            Number(
-                                input?.value
-                            );
-
-                        if (
-                            !Number.isFinite(
-                                quantity
-                            ) ||
-                            quantity <= 0
-                        ) {
-                            showInlineMessage(
-                                "Inserisci una quantità valida.",
-                                true
-                            );
-                            return;
-                        }
-
-                        button.disabled =
-                            true;
-
-                        showInlineMessage(
-                            "Contributo in corso..."
-                        );
-
-                        try {
-                            if (
-                                typeof currentConfig
-                                    ?.onContribute !==
-                                "function"
-                            ) {
-                                throw new Error(
-                                    "Gestore contributi non disponibile."
-                                );
-                            }
-
-                            const nextPayload =
-                                await currentConfig.onContribute(
-                                    itemId,
-                                    Math.floor(
-                                        quantity
-                                    )
-                                );
-
-                            if (nextPayload) {
-                                currentPayload =
-                                    nextPayload;
-                            }
-
-                            renderCurrent();
-
-                            showInlineMessage(
-                                "Contributo registrato."
-                            );
-                        } catch (error) {
-                            console.error(
-                                "[BASE SERVICES UI] Contributo:",
-                                error
-                            );
-
-                            showInlineMessage(
-                                error?.message ||
-                                "Impossibile registrare il contributo.",
-                                true
-                            );
-
-                            button.disabled =
-                                false;
-                        }
-                    }
-                );
-            });
     }
 
     function showInlineMessage(
@@ -601,6 +549,7 @@
             );
 
         if (!element) {
+
             element =
                 document.createElement(
                     "div"
@@ -632,6 +581,127 @@
         );
     }
 
+    function bindContributionButtons() {
+        if (!overlay) {
+            return;
+        }
+
+        overlay
+            .querySelectorAll(
+                ".base-service-contribute"
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    async () => {
+
+                        const itemId =
+                            button.dataset.itemId;
+
+                        const inputs =
+                            overlay.querySelectorAll(
+                                ".base-service-quantity"
+                            );
+
+                        let input = null;
+
+                        inputs.forEach(
+                            candidate => {
+
+                                if (
+                                    candidate.dataset
+                                        .itemId ===
+                                    itemId
+                                ) {
+                                    input =
+                                        candidate;
+                                }
+
+                            }
+                        );
+
+                        const quantity =
+                            Number(
+                                input?.value
+                            );
+
+                        if (
+                            !Number.isFinite(
+                                quantity
+                            ) ||
+                            quantity <= 0
+                        ) {
+                            showInlineMessage(
+                                "Inserisci una quantità valida.",
+                                true
+                            );
+
+                            return;
+                        }
+
+                        button.disabled =
+                            true;
+
+                        showInlineMessage(
+                            "Contributo in corso..."
+                        );
+
+                        try {
+
+                            if (
+                                typeof currentConfig
+                                    ?.onContribute !==
+                                "function"
+                            ) {
+                                throw new Error(
+                                    "Gestore contributi non disponibile."
+                                );
+                            }
+
+                            const nextPayload =
+                                await currentConfig
+                                    .onContribute(
+                                        itemId,
+                                        Math.floor(
+                                            quantity
+                                        )
+                                    );
+
+                            if (nextPayload) {
+                                currentPayload =
+                                    nextPayload;
+                            }
+
+                            renderCurrent();
+
+                            showInlineMessage(
+                                "Contributo registrato."
+                            );
+
+                        } catch (error) {
+
+                            console.error(
+                                "[BASE SERVICES UI] Contributo:",
+                                error
+                            );
+
+                            showInlineMessage(
+                                error?.message ||
+                                "Impossibile registrare il contributo.",
+                                true
+                            );
+
+                            button.disabled =
+                                false;
+                        }
+
+                    }
+                );
+
+            });
+    }
+
     function renderCurrent() {
         if (
             !overlay ||
@@ -647,19 +717,283 @@
             );
 
         const service =
-            currentPayload.service || {};
+            currentPayload.service ||
+            {};
 
         const status =
-            service.status || "unbuilt";
+            service.status ||
+            "unbuilt";
 
         let body = "";
 
-        if (status === "building") {
+        if (
+            status ===
+            "building"
+        ) {
+
             body =
                 renderBuilding(
                     currentPayload
                 );
-        } else if (status === "active") {
+
+        } else if (
+            status ===
+            "active"
+        ) {
+
             body =
                 renderActive(
                     currentPayload
+                );
+
+        } else {
+
+            body =
+                renderUnbuilt(
+                    currentConfig,
+                    currentPayload
+                );
+
+        }
+
+        content.innerHTML = `
+            <header
+                class="base-service-header"
+            >
+
+                <div>
+
+                    <span
+                        class="base-service-eyebrow"
+                    >
+                        SERVIZIO DEL LIVELLO BASE
+                    </span>
+
+                    <h2
+                        id="base-service-title"
+                    >
+                        ${escapeHtml(
+                            currentConfig.name ||
+                            service.display_name ||
+                            currentConfig.id
+                        )}
+                    </h2>
+
+                </div>
+
+            </header>
+
+            ${body}
+        `;
+
+        bindContributionButtons();
+
+        restartCountdown();
+    }
+
+    async function countdownTick() {
+        if (
+            !overlay ||
+            !currentPayload
+        ) {
+            return;
+        }
+
+        const service =
+            currentPayload.service ||
+            {};
+
+        const countdown =
+            overlay.querySelector(
+                ".base-service-live-countdown"
+            );
+
+        if (
+            service.status ===
+            "building"
+        ) {
+
+            const remaining =
+                getRemainingMs(
+                    currentPayload,
+                    service
+                        .construction_ready_at
+                );
+
+            if (countdown) {
+                countdown.textContent =
+                    formatDuration(
+                        remaining
+                    );
+            }
+
+            if (
+                remaining <= 0 &&
+                typeof refreshCallback ===
+                "function"
+            ) {
+                await refreshCallback();
+            }
+        }
+
+        if (
+            service.status ===
+            "active"
+        ) {
+
+            const info =
+                getMaintenanceInfo(
+                    currentPayload
+                );
+
+            if (countdown) {
+                countdown.textContent =
+                    formatDuration(
+                        info.remainingMs
+                    );
+            }
+
+            const reserve =
+                overlay.querySelector(
+                    ".base-service-live-reserve"
+                );
+
+            if (reserve) {
+                reserve.textContent =
+                    String(
+                        Math.ceil(
+                            info.equivalentGold
+                        )
+                    );
+            }
+
+            if (
+                info.remainingMs <= 0 &&
+                typeof refreshCallback ===
+                "function"
+            ) {
+                await refreshCallback();
+            }
+        }
+    }
+
+    function restartCountdown() {
+        if (countdownTimer) {
+            clearInterval(
+                countdownTimer
+            );
+        }
+
+        countdownTimer =
+            setInterval(
+                () => {
+
+                    countdownTick()
+                        .catch(
+                            error => {
+
+                                console.warn(
+                                    "[BASE SERVICES UI] Countdown:",
+                                    error
+                                );
+
+                            }
+                        );
+
+                },
+                1000
+            );
+    }
+
+    function open(
+        config,
+        payload,
+        options = {}
+    ) {
+        createShell();
+
+        currentConfig = {
+            ...config,
+
+            onContribute:
+                options.onContribute
+        };
+
+        currentPayload =
+            payload;
+
+        refreshCallback =
+            options.onRefresh ||
+            null;
+
+        overlay.classList.add(
+            "is-open"
+        );
+
+        document.body.classList.add(
+            "base-service-modal-open"
+        );
+
+        renderCurrent();
+    }
+
+    function update(payload) {
+        if (!payload) {
+            return;
+        }
+
+        currentPayload =
+            payload;
+
+        if (
+            overlay?.classList
+                .contains(
+                    "is-open"
+                )
+        ) {
+            renderCurrent();
+        }
+    }
+
+    function close() {
+        if (!overlay) {
+            return;
+        }
+
+        overlay.classList.remove(
+            "is-open"
+        );
+
+        document.body.classList.remove(
+            "base-service-modal-open"
+        );
+
+        if (countdownTimer) {
+
+            clearInterval(
+                countdownTimer
+            );
+
+            countdownTimer =
+                null;
+        }
+    }
+
+    function isOpen() {
+        return Boolean(
+            overlay?.classList
+                .contains(
+                    "is-open"
+                )
+        );
+    }
+
+    window.BaseServicesUi = {
+        open,
+        update,
+        close,
+        isOpen,
+        formatDuration
+    };
+
+})();
