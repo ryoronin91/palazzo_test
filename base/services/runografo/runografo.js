@@ -111,9 +111,10 @@ document.addEventListener(
                 return;
             }
 
-            await setCharacterLocation(
-                "runografo"
-            );
+            /*
+             * Il Runografo è un servizio del Livello Base:
+             * current_location resta "base".
+             */
 
             await loadCharacterInventory();
 

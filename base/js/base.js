@@ -1298,10 +1298,7 @@ async function enterBaseRunografo() {
                     base_y:
                         Number(
                             basePlayerY
-                        ),
-
-                    current_location:
-                        "runografo"
+                        )
                 })
                 .eq(
                     "id",
@@ -1322,8 +1319,11 @@ async function enterBaseRunografo() {
                 basePlayerY
             );
 
-        character.current_location =
-            "runografo";
+        /*
+         * Il Runografo è un servizio interno al Livello Base.
+         * Non cambiamo current_location: il PG resta logicamente
+         * nella Base anche mentre usa il servizio.
+         */
 
         window.location.href =
             BASE_RUNOGRAFO_PAGE;
