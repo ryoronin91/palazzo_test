@@ -121,26 +121,41 @@
 
 
     function getServerOffset(
-        payload
+    payload
+) {
+    if (!payload) {
+        return 0;
+    }
+
+    if (
+        Number.isFinite(
+            payload._serverOffsetMs
+        )
     ) {
-        const serverNow =
-            Date.parse(
-                payload
-                    ?.server_now
-            );
+        return payload._serverOffsetMs;
+    }
 
-        if (
-            !Number.isFinite(
-                serverNow
-            )
-        ) {
-            return 0;
-        }
-
-        return (
-            serverNow -
-            Date.now()
+    const serverNow =
+        Date.parse(
+            payload.server_now
         );
+
+    if (
+        !Number.isFinite(
+            serverNow
+        )
+    ) {
+        payload._serverOffsetMs = 0;
+
+        return 0;
+    }
+
+    payload._serverOffsetMs =
+        serverNow - Date.now();
+
+    return payload._serverOffsetMs;
+}
+
     }
 
 

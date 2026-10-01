@@ -34,6 +34,7 @@
     let refreshTimer = null;
     let resizeBound = false;
     let activeAreaServiceId = null;
+    let visualProgressTimer = null;
 
     const stateByService =
         new Map();
@@ -499,6 +500,56 @@
         }
     }
 
+    function getConstructionProgress(
+    payload
+) {
+    const service =
+        payload?.service;
+
+    if (
+        !service ||
+        service.status !== "building"
+    ) {
+        return 0;
+    }
+
+    const startedAt =
+        Date.parse(
+            service.construction_started_at
+        );
+
+    const readyAt =
+        Date.parse(
+            service.construction_ready_at
+        );
+
+    if (
+        !Number.isFinite(startedAt) ||
+        !Number.isFinite(readyAt) ||
+        readyAt <= startedAt
+    ) {
+        return 0;
+    }
+
+    const now =
+        Date.now();
+
+    const progress =
+        (
+            now - startedAt
+        ) /
+        (
+            readyAt - startedAt
+        );
+
+    return Math.max(
+        0,
+        Math.min(
+            1,
+            progress
+        )
+    );
+}
 
     function renderServiceVisual(
         serviceId
@@ -575,17 +626,42 @@
             `is-${status}`;
 
 
-        visual.building.innerHTML =
-            status ===
-            "building"
-                ? `
-                    <span
-                        class="base-service-map-badge"
-                    >
-                        ⚒
-                    </span>
-                `
-                : "";
+        if (
+    status ===
+    "building"
+) {
+    const progress =
+        getConstructionProgress(
+            payload
+        );
+
+    const degrees =
+        Math.round(
+            progress * 360
+        );
+
+    const percentage =
+        Math.round(
+            progress * 100
+        );
+
+    visual.building.innerHTML = `
+        <div
+            class="base-service-construction-ring"
+            style="--construction-progress:${degrees}deg"
+            title="Costruzione ${percentage}%"
+        >
+            <div
+                class="base-service-construction-ring-inner"
+            >
+                ⚒
+            </div>
+        </div>
+    `;
+} else {
+    visual.building.innerHTML =
+        "";
+}
 
 
         positionVisual(
@@ -800,6 +876,29 @@
             );
     }
 
+    function updateServiceVisualProgress() {
+    services.forEach(
+        service => {
+
+            const payload =
+                stateByService.get(
+                    service.id
+                );
+
+            if (
+                payload
+                    ?.service
+                    ?.status ===
+                "building"
+            ) {
+                renderServiceVisual(
+                    service.id
+                );
+            }
+
+        }
+    );
+}
 
     async function initializeBaseServices() {
         if (
@@ -850,6 +949,11 @@
                 STATE_REFRESH_MS
             );
 
+            visualProgressTimer =
+    window.setInterval(
+        updateServiceVisualProgress,
+        1000
+    );
 
         initialized =
             true;
@@ -872,6 +976,17 @@
             refreshTimer =
                 null;
         }
+
+        if (
+    visualProgressTimer
+) {
+    clearInterval(
+        visualProgressTimer
+    );
+
+    visualProgressTimer =
+        null;
+}
 
         window
             .BaseServicesApi
