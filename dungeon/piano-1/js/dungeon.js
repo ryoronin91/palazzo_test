@@ -1259,7 +1259,7 @@ async function enforceDungeonPageState(
     ) {
 
         window.location.replace(
-            "../../vendor.html"
+            "../../../base/services/vendor/vendor.html"
         );
 
         return true;

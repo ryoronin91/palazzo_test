@@ -35,7 +35,7 @@ const BASE_VENDOR_X = 22;
 const BASE_VENDOR_Y = 13;
 
 const BASE_VENDOR_PAGE =
-    "../vendor.html";
+    "services/vendor/vendor.html";
 
 let baseVendorEntering =
     false;

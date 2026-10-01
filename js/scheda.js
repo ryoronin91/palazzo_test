@@ -3962,7 +3962,7 @@ function enterPalazzoAtLastLocation(
     ) {
 
         window.location.href =
-            "vendor.html";
+            "../../../base/services/vendor/vendor.html";
 
         return;
 

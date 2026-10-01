@@ -548,7 +548,7 @@ document.addEventListener(
     async () => {
 
         startBackgroundMusic(
-            "music/vendor.mp3"
+            "../../../music/vendor.mp3"
         );
 
 
@@ -618,7 +618,7 @@ async function loadVendorCharacter() {
     if (!user) {
 
         window.location.href =
-            "login.html";
+            "../../../login.html";
 
         return;
 
@@ -659,7 +659,7 @@ async function loadVendorCharacter() {
     if (!data) {
 
         window.location.href =
-            "personaggio.html";
+            "../../../personaggio.html";
 
         return;
 
@@ -1205,7 +1205,7 @@ function setupVendorExitButton() {
                 "dungeon";
 
             let returnPage =
-                "dungeon/piano-1/dungeon.html";
+                "../../../dungeon/piano-1/dungeon.html";
 
 
             try {
@@ -1225,7 +1225,7 @@ function setupVendorExitButton() {
                         "base";
 
                     returnPage =
-                        "base/base.html";
+                        "../../base/base.html";
 
                 }
 
