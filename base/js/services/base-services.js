@@ -29,6 +29,12 @@
     const STATE_REFRESH_MS =
         30000;
 
+    const RUNOGRAFO_SERVICE_ID =
+        "runografo";
+
+    const RUNOGRAFO_PAGE =
+        "services/runografo/runografo.html";
+
     let services = [];
     let initialized = false;
     let refreshTimer = null;
@@ -235,11 +241,24 @@
                 .BaseServicesUi
                 .isOpen()
         ) {
-            window
-                .BaseServicesUi
-                .update(
-                    payload
-                );
+
+            if (
+                payload
+                    ?.service
+                    ?.status ===
+                "active"
+            ) {
+
+                closeServicePopupIfOpen();
+
+            } else {
+
+                window
+                    .BaseServicesUi
+                    .update(
+                        payload
+                    );
+            }
         }
 
         return payload;
@@ -354,6 +373,26 @@
 
             npc.draggable =
                 false;
+
+            npc.style.pointerEvents =
+                "auto";
+
+            npc.style.cursor =
+                "pointer";
+
+            npc.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    handleServiceNpcClick(
+                        service.id
+                    );
+
+                }
+            );
 
 
             const building =
@@ -588,21 +627,24 @@
                 ?.status ||
             "unbuilt";
 
-            if (
-    service.id === "runografo"
-) {
-    const carpet =
-        document.querySelector(
-            '[data-decoration-id="tappeto_runografo"]'
-        );
+        if (
+            service.id ===
+            RUNOGRAFO_SERVICE_ID
+        ) {
 
-    if (carpet) {
-        carpet.src =
-            status === "active"
-                ? "immagini/tappeto_blu.png"
-                : "immagini/tappetoX.png";
-    }
-}
+            const carpet =
+                document.querySelector(
+                    '[data-decoration-id="tappeto_runografo"]'
+                );
+
+            if (carpet) {
+
+                carpet.src =
+                    status === "active"
+                        ? "immagini/tappeto_blu.png"
+                        : "immagini/tappetoX.png";
+            }
+        }
 
         if (
             service
@@ -635,6 +677,18 @@
                 ? "block"
                 : "none";
 
+        visual.npc.style.pointerEvents =
+            status ===
+            "active"
+                ? "auto"
+                : "none";
+
+        visual.npc.style.cursor =
+            status ===
+            "active"
+                ? "pointer"
+                : "default";
+
 
         visual.building.className =
             "base-service-building-marker " +
@@ -642,41 +696,44 @@
 
 
         if (
-    status ===
-    "building"
-) {
-    const progress =
-        getConstructionProgress(
-            payload
-        );
+            status ===
+            "building"
+        ) {
 
-    const degrees =
-        Math.round(
-            progress * 360
-        );
+            const progress =
+                getConstructionProgress(
+                    payload
+                );
 
-    const percentage =
-        Math.round(
-            progress * 100
-        );
+            const degrees =
+                Math.round(
+                    progress * 360
+                );
 
-    visual.building.innerHTML = `
-        <div
-            class="base-service-construction-ring"
-            style="--construction-progress:${degrees}deg"
-            title="Costruzione ${percentage}%"
-        >
-            <div
-                class="base-service-construction-ring-inner"
-            >
-                ⚒
-            </div>
-        </div>
-    `;
-} else {
-    visual.building.innerHTML =
-        "";
-}
+            const percentage =
+                Math.round(
+                    progress * 100
+                );
+
+            visual.building.innerHTML = `
+                <div
+                    class="base-service-construction-ring"
+                    style="--construction-progress:${degrees}deg"
+                    title="Costruzione ${percentage}%"
+                >
+                    <div
+                        class="base-service-construction-ring-inner"
+                    >
+                        ⚒
+                    </div>
+                </div>
+            `;
+
+        } else {
+
+            visual.building.innerHTML =
+                "";
+        }
 
 
         positionVisual(
@@ -705,6 +762,235 @@
                 }
 
             }
+        );
+    }
+
+
+    function closeServicePopupIfOpen() {
+
+        if (
+            !window.BaseServicesUi ||
+            !window.BaseServicesUi.isOpen?.()
+        ) {
+            return;
+        }
+
+        if (
+            typeof window
+                .BaseServicesUi
+                .close ===
+            "function"
+        ) {
+
+            window
+                .BaseServicesUi
+                .close();
+
+            return;
+        }
+
+        /*
+         * Fallback prudente:
+         * se la UI non espone ancora close(), non apriamo
+         * comunque nuovi popup quando il servizio è active.
+         */
+    }
+
+
+    function getCurrentBasePlayerPosition() {
+
+        let x = null;
+        let y = null;
+
+        try {
+
+            if (
+                typeof basePlayerX !==
+                "undefined"
+            ) {
+
+                x =
+                    Number(
+                        basePlayerX
+                    );
+            }
+
+            if (
+                typeof basePlayerY !==
+                "undefined"
+            ) {
+
+                y =
+                    Number(
+                        basePlayerY
+                    );
+            }
+
+        } catch (_) {
+
+            // Il manager rimane indipendente da base.js.
+        }
+
+        if (
+            !Number.isFinite(x) ||
+            !Number.isFinite(y)
+        ) {
+
+            return null;
+        }
+
+        return {
+            x,
+            y
+        };
+    }
+
+
+    function isPlayerAdjacentToServiceNpc(
+        service
+    ) {
+
+        const player =
+            getCurrentBasePlayerPosition();
+
+        const npc =
+            service?.npc;
+
+        if (
+            !player ||
+            !npc
+        ) {
+
+            return false;
+        }
+
+        const dx =
+            Math.abs(
+                player.x -
+                Number(
+                    npc.x
+                )
+            );
+
+        const dy =
+            Math.abs(
+                player.y -
+                Number(
+                    npc.y
+                )
+            );
+
+        return (
+            dx + dy ===
+            1
+        );
+    }
+
+
+    async function handleServiceNpcClick(
+        serviceId
+    ) {
+
+        const service =
+            findService(
+                serviceId
+            );
+
+        if (!service) {
+            return;
+        }
+
+        let payload =
+            stateByService.get(
+                serviceId
+            );
+
+        try {
+
+            payload =
+                await fetchServiceState(
+                    serviceId
+                );
+
+        } catch (error) {
+
+            console.error(
+                "[BASE SERVICES] Click NPC:",
+                error
+            );
+
+            if (
+                typeof setMessage ===
+                "function"
+            ) {
+
+                setMessage(
+                    error?.message ||
+                    "Impossibile interagire con il servizio.",
+                    true
+                );
+            }
+
+            return;
+        }
+
+        const status =
+            payload
+                ?.service
+                ?.status ||
+            "unbuilt";
+
+        if (
+            status !==
+            "active"
+        ) {
+
+            if (
+                typeof setMessage ===
+                "function"
+            ) {
+
+                setMessage(
+                    `${service.name || "Il servizio"} non è ancora disponibile.`
+                );
+            }
+
+            return;
+        }
+
+        if (
+            !isPlayerAdjacentToServiceNpc(
+                service
+            )
+        ) {
+
+            if (
+                typeof setMessage ===
+                "function"
+            ) {
+
+                setMessage(
+                    `Avvicinati a ${service.name || "questo servizio"} per interagire.`
+                );
+            }
+
+            return;
+        }
+
+        if (
+            service.id ===
+            RUNOGRAFO_SERVICE_ID
+        ) {
+
+            window.location.href =
+                RUNOGRAFO_PAGE;
+
+            return;
+        }
+
+        console.warn(
+            "[BASE SERVICES] Nessuna pagina associata al servizio:",
+            service.id
         );
     }
 
@@ -757,6 +1043,19 @@
                     true
                 );
             }
+
+            return;
+        }
+
+
+        if (
+            payload
+                ?.service
+                ?.status ===
+            "active"
+        ) {
+
+            closeServicePopupIfOpen();
 
             return;
         }
@@ -834,6 +1133,45 @@
 
         activeAreaServiceId =
             service.id;
+
+        let payload =
+            stateByService.get(
+                service.id
+            );
+
+        if (
+            !payload
+        ) {
+
+            try {
+
+                payload =
+                    await fetchServiceState(
+                        service.id
+                    );
+
+            } catch (error) {
+
+                console.warn(
+                    "[BASE SERVICES] Controllo area:",
+                    error
+                );
+
+                return;
+            }
+        }
+
+        if (
+            payload
+                ?.service
+                ?.status ===
+            "active"
+        ) {
+
+            closeServicePopupIfOpen();
+
+            return;
+        }
 
         await openService(
             service
