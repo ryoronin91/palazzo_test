@@ -1225,7 +1225,7 @@ function setupVendorExitButton() {
                         "base";
 
                     returnPage =
-                        "../../base/base.html";
+                        "../../base.html";
 
                 }
 
