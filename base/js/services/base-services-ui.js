@@ -1,3 +1,10 @@
+// ============================================================
+// PALAZZO ETERNO
+// BASE SERVICES - UI
+//
+// Popup, requisiti, zaino e countdown.
+// ============================================================
+
 (() => {
     "use strict";
 
@@ -7,78 +14,161 @@
     let currentPayload = null;
     let currentConfig = null;
 
-    function escapeHtml(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+
+    function escapeHtml(
+        value
+    ) {
+        return String(
+            value ?? ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
     }
 
-    function formatDuration(milliseconds) {
-        const totalSeconds = Math.max(
-            0,
-            Math.ceil(milliseconds / 1000)
-        );
 
-        const hours = Math.floor(
-            totalSeconds / 3600
-        );
+    function formatDuration(
+        milliseconds
+    ) {
+        const totalSeconds =
+            Math.max(
+                0,
+                Math.ceil(
+                    milliseconds /
+                    1000
+                )
+            );
 
-        const minutes = Math.floor(
-            (totalSeconds % 3600) / 60
-        );
+        const hours =
+            Math.floor(
+                totalSeconds /
+                3600
+            );
+
+        const minutes =
+            Math.floor(
+                (
+                    totalSeconds %
+                    3600
+                ) /
+                60
+            );
 
         const seconds =
-            totalSeconds % 60;
+            totalSeconds %
+            60;
 
-        if (hours > 0) {
+        if (
+            hours > 0
+        ) {
             return (
-                String(hours).padStart(2, "0") +
+                String(
+                    hours
+                ).padStart(
+                    2,
+                    "0"
+                ) +
                 ":" +
-                String(minutes).padStart(2, "0") +
+                String(
+                    minutes
+                ).padStart(
+                    2,
+                    "0"
+                ) +
                 ":" +
-                String(seconds).padStart(2, "0")
+                String(
+                    seconds
+                ).padStart(
+                    2,
+                    "0"
+                )
             );
         }
 
         return (
-            String(minutes).padStart(2, "0") +
+            String(
+                minutes
+            ).padStart(
+                2,
+                "0"
+            ) +
             ":" +
-            String(seconds).padStart(2, "0")
+            String(
+                seconds
+            ).padStart(
+                2,
+                "0"
+            )
         );
     }
 
-    function getServerOffset(payload) {
+
+    function getServerOffset(
+        payload
+    ) {
         const serverNow =
             Date.parse(
-                payload?.server_now
+                payload
+                    ?.server_now
             );
 
-        return Number.isFinite(
-            serverNow
-        )
-            ? serverNow - Date.now()
-            : 0;
-    }
+        if (
+            !Number.isFinite(
+                serverNow
+            )
+        ) {
+            return 0;
+        }
 
-    function getEffectiveNow(payload) {
         return (
-            Date.now() +
-            getServerOffset(payload)
+            serverNow -
+            Date.now()
         );
     }
+
+
+    function getEffectiveNow(
+        payload
+    ) {
+        return (
+            Date.now() +
+            getServerOffset(
+                payload
+            )
+        );
+    }
+
 
     function getRemainingMs(
         payload,
         targetDate
     ) {
         const target =
-            Date.parse(targetDate);
+            Date.parse(
+                targetDate
+            );
 
         if (
-            !Number.isFinite(target)
+            !Number.isFinite(
+                target
+            )
         ) {
             return 0;
         }
@@ -86,27 +176,36 @@
         return Math.max(
             0,
             target -
-            getEffectiveNow(payload)
+            getEffectiveNow(
+                payload
+            )
         );
     }
+
 
     function getGoldRequirement(
         payload
     ) {
         return (
-            payload?.requirements?.find(
-                item =>
-                    item.item_id ===
-                    "moneta_oro"
-            ) || null
+            payload
+                ?.requirements
+                ?.find(
+                    item =>
+                        item.item_id ===
+                        "moneta_oro"
+                ) ||
+            null
         );
     }
+
 
     function getMaintenanceInfo(
         payload
     ) {
         const service =
-            payload?.service || {};
+            payload
+                ?.service ||
+            {};
 
         const goldRequirement =
             getGoldRequirement(
@@ -116,13 +215,15 @@
         const totalGold =
             Number(
                 goldRequirement
-                    ?.required_quantity || 0
+                    ?.required_quantity ||
+                0
             );
 
         const totalSeconds =
             Number(
                 service
-                    .maintenance_seconds || 0
+                    .maintenance_seconds ||
+                0
             );
 
         const remainingMs =
@@ -133,9 +234,11 @@
             );
 
         const remainingSeconds =
-            remainingMs / 1000;
+            remainingMs /
+            1000;
 
-        let equivalentGold = 0;
+        let equivalentGold =
+            0;
 
         if (
             totalGold > 0 &&
@@ -160,8 +263,11 @@
         };
     }
 
+
     function createShell() {
-        if (overlay) {
+        if (
+            overlay
+        ) {
             return;
         }
 
@@ -196,6 +302,7 @@
             </section>
         `;
 
+
         overlay.addEventListener(
             "click",
             event => {
@@ -210,6 +317,7 @@
             }
         );
 
+
         overlay
             .querySelector(
                 ".base-service-close"
@@ -219,10 +327,12 @@
                 close
             );
 
+
         document.body.appendChild(
             overlay
         );
     }
+
 
     function renderRequirement(
         requirement
@@ -230,13 +340,22 @@
         const required =
             Number(
                 requirement
-                    .required_quantity || 0
+                    .required_quantity ||
+                0
             );
 
         const contributed =
             Number(
                 requirement
-                    .contributed_quantity || 0
+                    .contributed_quantity ||
+                0
+            );
+
+        const inventoryQuantity =
+            Number(
+                requirement
+                    .inventory_quantity ||
+                0
             );
 
         const remaining =
@@ -262,12 +381,15 @@
             remaining <= 0;
 
         const itemName =
-            requirement.item_name ||
-            requirement.item_id;
+            requirement
+                .item_name ||
+            requirement
+                .item_id;
 
         const itemId =
             escapeHtml(
-                requirement.item_id
+                requirement
+                    .item_id
             );
 
         return `
@@ -290,54 +412,71 @@
                     </strong>
 
                     <span>
-                        ${contributed} / ${required}
-                        ${complete ? " ✓" : ""}
+                        ${contributed}
+                        /
+                        ${required}
+
+                        ${
+                            complete
+                                ? " ✓"
+                                : ""
+                        }
                     </span>
 
                 </div>
+
 
                 <div
                     class="base-service-progress"
                     aria-hidden="true"
                 >
+
                     <span
                         style="width:${percent}%"
                     ></span>
+
                 </div>
+
 
                 ${
                     complete
                         ? ""
                         : `
-                    <div
-                        class="base-service-contribution-row"
+                    <input
+                        class="base-service-quantity"
+                        type="number"
+                        min="1"
+                        max="${remaining}"
+                        value="1"
+                        inputmode="numeric"
+                        placeholder="Quantità da aggiungere"
+                        data-item-id="${itemId}"
                     >
 
-                        <input
-                            class="base-service-quantity"
-                            type="number"
-                            min="1"
-                            max="${remaining}"
-                            value="1"
-                            inputmode="numeric"
-                            data-item-id="${itemId}"
-                        >
-
-                        <button
-                            type="button"
-                            class="base-service-contribute"
-                            data-item-id="${itemId}"
-                        >
-                            CONTRIBUISCI
-                        </button>
-
-                    </div>
+                    <button
+                        type="button"
+                        class="base-service-contribute"
+                        data-item-id="${itemId}"
+                    >
+                        CONTRIBUISCI
+                    </button>
                 `
                 }
+
+
+                <div
+                    class="base-service-inventory-count"
+                >
+                    Zaino:
+                    <strong>
+                        ${inventoryQuantity}
+                    </strong>
+                </div>
 
             </div>
         `;
     }
+
 
     function renderUnbuilt(
         config,
@@ -345,9 +484,11 @@
     ) {
         const requirements =
             Array.isArray(
-                payload?.requirements
+                payload
+                    ?.requirements
             )
-                ? payload.requirements
+                ? payload
+                    .requirements
                 : [];
 
         return `
@@ -357,18 +498,22 @@
                 DA COSTRUIRE
             </div>
 
+
             <p
                 class="base-service-description"
             >
                 ${escapeHtml(
-                    config?.description ||
+                    config
+                        ?.description ||
                     "Questo servizio deve ancora essere costruito."
                 )}
             </p>
 
+
             <h3>
                 Risorse necessarie
             </h3>
+
 
             <div
                 class="base-service-requirements"
@@ -382,24 +527,29 @@
                 }
             </div>
 
-            <p
-    class="base-service-note"
->
-    Tutti i giocatori possono contribuire alla costruzione.
-    Quando tutti i requisiti saranno completati,
-    inizierà l'evocazione del Runografo.
-</p>
 
-<p
-    class="base-service-note"
->
-    La costruzione richiederà 1 ora.
-    Una volta evocato, il Runografo resterà disponibile
-    solo per un tempo limitato, a meno che i giocatori
-    non continuino a riempire la sua riserva di monete.
-</p>
+            <p
+                class="base-service-note"
+            >
+                Tutti i giocatori possono contribuire
+                alla costruzione.
+                Quando tutti i requisiti saranno completati,
+                inizierà l'evocazione del Runografo.
+            </p>
+
+
+            <p
+                class="base-service-note"
+            >
+                La costruzione richiederà 1 ora.
+                Una volta evocato, il Runografo resterà
+                disponibile solo per un tempo limitato,
+                a meno che i giocatori non continuino
+                a riempire la sua riserva di monete.
+            </p>
         `;
     }
+
 
     function renderBuilding(
         payload
@@ -407,7 +557,8 @@
         const remaining =
             getRemainingMs(
                 payload,
-                payload?.service
+                payload
+                    ?.service
                     ?.construction_ready_at
             );
 
@@ -417,6 +568,7 @@
             >
                 IN COSTRUZIONE
             </div>
+
 
             <div
                 class="base-service-countdown-block"
@@ -437,16 +589,18 @@
 
             </div>
 
+
             <p
                 class="base-service-note"
             >
                 Al termine della costruzione
-                il servizio diventerà operativo
+                il Runografo diventerà operativo
                 e inizierà a consumare la propria
                 riserva di monete.
             </p>
         `;
     }
+
 
     function renderActive(
         payload
@@ -462,6 +616,7 @@
             >
                 ATTIVO
             </div>
+
 
             <div
                 class="base-service-countdown-block"
@@ -482,6 +637,7 @@
 
             </div>
 
+
             <div
                 class="base-service-reserve"
             >
@@ -498,6 +654,7 @@
                 monete
             </div>
 
+
             <div
                 class="base-service-maintenance-box"
             >
@@ -508,31 +665,28 @@
                     Aggiungi monete alla riserva
                 </label>
 
-                <div
-                    class="base-service-contribution-row"
+
+                <input
+                    id="base-service-maintenance-quantity"
+                    class="base-service-quantity"
+                    type="number"
+                    min="1"
+                    value="1"
+                    inputmode="numeric"
+                    data-item-id="moneta_oro"
                 >
 
-                    <input
-                        id="base-service-maintenance-quantity"
-                        class="base-service-quantity"
-                        type="number"
-                        min="1"
-                        value="1"
-                        inputmode="numeric"
-                        data-item-id="moneta_oro"
-                    >
 
-                    <button
-                        type="button"
-                        class="base-service-contribute"
-                        data-item-id="moneta_oro"
-                    >
-                        VERSA MONETE
-                    </button>
-
-                </div>
+                <button
+                    type="button"
+                    class="base-service-contribute"
+                    data-item-id="moneta_oro"
+                >
+                    VERSA MONETE
+                </button>
 
             </div>
+
 
             <p
                 class="base-service-warning"
@@ -544,21 +698,26 @@
         `;
     }
 
+
     function showInlineMessage(
         message,
         isError = false
     ) {
-        if (!overlay) {
+        if (
+            !overlay
+        ) {
             return;
         }
 
         let element =
-            overlay.querySelector(
-                ".base-service-feedback"
-            );
+            overlay
+                .querySelector(
+                    ".base-service-feedback"
+                );
 
-        if (!element) {
-
+        if (
+            !element
+        ) {
             element =
                 document.createElement(
                     "div"
@@ -579,19 +738,30 @@
         element.textContent =
             message || "";
 
-        element.classList.toggle(
-            "is-error",
-            Boolean(isError)
-        );
+        element
+            .classList
+            .toggle(
+                "is-error",
+                Boolean(
+                    isError
+                )
+            );
 
-        element.classList.toggle(
-            "is-visible",
-            Boolean(message)
-        );
+        element
+            .classList
+            .toggle(
+                "is-visible",
+                Boolean(
+                    message
+                )
+            );
     }
 
+
     function bindContributionButtons() {
-        if (!overlay) {
+        if (
+            !overlay
+        ) {
             return;
         }
 
@@ -599,117 +769,128 @@
             .querySelectorAll(
                 ".base-service-contribute"
             )
-            .forEach(button => {
+            .forEach(
+                button => {
 
-                button.addEventListener(
-                    "click",
-                    async () => {
+                    button.addEventListener(
+                        "click",
+                        async () => {
 
-                        const itemId =
-                            button.dataset.itemId;
+                            const itemId =
+                                button
+                                    .dataset
+                                    .itemId;
 
-                        const inputs =
-                            overlay.querySelectorAll(
-                                ".base-service-quantity"
-                            );
-
-                        let input = null;
-
-                        inputs.forEach(
-                            candidate => {
-
-                                if (
-                                    candidate.dataset
-                                        .itemId ===
-                                    itemId
-                                ) {
-                                    input =
-                                        candidate;
-                                }
-
-                            }
-                        );
-
-                        const quantity =
-                            Number(
-                                input?.value
-                            );
-
-                        if (
-                            !Number.isFinite(
-                                quantity
-                            ) ||
-                            quantity <= 0
-                        ) {
-                            showInlineMessage(
-                                "Inserisci una quantità valida.",
-                                true
-                            );
-
-                            return;
-                        }
-
-                        button.disabled =
-                            true;
-
-                        showInlineMessage(
-                            "Contributo in corso..."
-                        );
-
-                        try {
-
-                            if (
-                                typeof currentConfig
-                                    ?.onContribute !==
-                                "function"
-                            ) {
-                                throw new Error(
-                                    "Gestore contributi non disponibile."
-                                );
-                            }
-
-                            const nextPayload =
-                                await currentConfig
-                                    .onContribute(
-                                        itemId,
-                                        Math.floor(
-                                            quantity
-                                        )
+                            const inputs =
+                                overlay
+                                    .querySelectorAll(
+                                        ".base-service-quantity"
                                     );
 
-                            if (nextPayload) {
-                                currentPayload =
-                                    nextPayload;
+                            let input =
+                                null;
+
+                            inputs.forEach(
+                                candidate => {
+
+                                    if (
+                                        candidate
+                                            .dataset
+                                            .itemId ===
+                                        itemId
+                                    ) {
+                                        input =
+                                            candidate;
+                                    }
+
+                                }
+                            );
+
+                            const quantity =
+                                Number(
+                                    input
+                                        ?.value
+                                );
+
+                            if (
+                                !Number.isFinite(
+                                    quantity
+                                ) ||
+                                quantity <= 0
+                            ) {
+                                showInlineMessage(
+                                    "Inserisci una quantità valida.",
+                                    true
+                                );
+
+                                return;
                             }
 
-                            renderCurrent();
-
-                            showInlineMessage(
-                                "Contributo registrato."
-                            );
-
-                        } catch (error) {
-
-                            console.error(
-                                "[BASE SERVICES UI] Contributo:",
-                                error
-                            );
-
-                            showInlineMessage(
-                                error?.message ||
-                                "Impossibile registrare il contributo.",
-                                true
-                            );
-
                             button.disabled =
-                                false;
+                                true;
+
+                            showInlineMessage(
+                                "Contributo in corso..."
+                            );
+
+                            try {
+
+                                if (
+                                    typeof currentConfig
+                                        ?.onContribute !==
+                                    "function"
+                                ) {
+                                    throw new Error(
+                                        "Gestore contributi non disponibile."
+                                    );
+                                }
+
+                                const nextPayload =
+                                    await currentConfig
+                                        .onContribute(
+                                            itemId,
+                                            Math.floor(
+                                                quantity
+                                            )
+                                        );
+
+                                if (
+                                    nextPayload
+                                ) {
+                                    currentPayload =
+                                        nextPayload;
+                                }
+
+                                renderCurrent();
+
+                                showInlineMessage(
+                                    "Contributo registrato."
+                                );
+
+                            } catch (error) {
+
+                                console.error(
+                                    "[BASE SERVICES UI] Contributo:",
+                                    error
+                                );
+
+                                showInlineMessage(
+                                    error?.message ||
+                                    "Impossibile registrare il contributo.",
+                                    true
+                                );
+
+                                button.disabled =
+                                    false;
+                            }
+
                         }
+                    );
 
-                    }
-                );
-
-            });
+                }
+            );
     }
+
 
     function renderCurrent() {
         if (
@@ -721,12 +902,14 @@
         }
 
         const content =
-            overlay.querySelector(
-                ".base-service-content"
-            );
+            overlay
+                .querySelector(
+                    ".base-service-content"
+                );
 
         const service =
-            currentPayload.service ||
+            currentPayload
+                .service ||
             {};
 
         const status =
@@ -739,7 +922,6 @@
             status ===
             "building"
         ) {
-
             body =
                 renderBuilding(
                     currentPayload
@@ -749,21 +931,19 @@
             status ===
             "active"
         ) {
-
             body =
                 renderActive(
                     currentPayload
                 );
 
         } else {
-
             body =
                 renderUnbuilt(
                     currentConfig,
                     currentPayload
                 );
-
         }
+
 
         content.innerHTML = `
             <header
@@ -795,10 +975,12 @@
             ${body}
         `;
 
+
         bindContributionButtons();
 
         restartCountdown();
     }
+
 
     async function countdownTick() {
         if (
@@ -809,19 +991,21 @@
         }
 
         const service =
-            currentPayload.service ||
+            currentPayload
+                .service ||
             {};
 
         const countdown =
-            overlay.querySelector(
-                ".base-service-live-countdown"
-            );
+            overlay
+                .querySelector(
+                    ".base-service-live-countdown"
+                );
+
 
         if (
             service.status ===
             "building"
         ) {
-
             const remaining =
                 getRemainingMs(
                     currentPayload,
@@ -829,7 +1013,9 @@
                         .construction_ready_at
                 );
 
-            if (countdown) {
+            if (
+                countdown
+            ) {
                 countdown.textContent =
                     formatDuration(
                         remaining
@@ -839,23 +1025,25 @@
             if (
                 remaining <= 0 &&
                 typeof refreshCallback ===
-                "function"
+                    "function"
             ) {
                 await refreshCallback();
             }
         }
 
+
         if (
             service.status ===
             "active"
         ) {
-
             const info =
                 getMaintenanceInfo(
                     currentPayload
                 );
 
-            if (countdown) {
+            if (
+                countdown
+            ) {
                 countdown.textContent =
                     formatDuration(
                         info.remainingMs
@@ -863,11 +1051,14 @@
             }
 
             const reserve =
-                overlay.querySelector(
-                    ".base-service-live-reserve"
-                );
+                overlay
+                    .querySelector(
+                        ".base-service-live-reserve"
+                    );
 
-            if (reserve) {
+            if (
+                reserve
+            ) {
                 reserve.textContent =
                     String(
                         Math.ceil(
@@ -879,15 +1070,18 @@
             if (
                 info.remainingMs <= 0 &&
                 typeof refreshCallback ===
-                "function"
+                    "function"
             ) {
                 await refreshCallback();
             }
         }
     }
 
+
     function restartCountdown() {
-        if (countdownTimer) {
+        if (
+            countdownTimer
+        ) {
             clearInterval(
                 countdownTimer
             );
@@ -900,12 +1094,10 @@
                     countdownTick()
                         .catch(
                             error => {
-
                                 console.warn(
                                     "[BASE SERVICES UI] Countdown:",
                                     error
                                 );
-
                             }
                         );
 
@@ -913,6 +1105,7 @@
                 1000
             );
     }
+
 
     function open(
         config,
@@ -925,29 +1118,40 @@
             ...config,
 
             onContribute:
-                options.onContribute
+                options
+                    .onContribute
         };
 
         currentPayload =
             payload;
 
         refreshCallback =
-            options.onRefresh ||
+            options
+                .onRefresh ||
             null;
 
-        overlay.classList.add(
-            "is-open"
-        );
+        overlay
+            .classList
+            .add(
+                "is-open"
+            );
 
-        document.body.classList.add(
-            "base-service-modal-open"
-        );
+        document.body
+            .classList
+            .add(
+                "base-service-modal-open"
+            );
 
         renderCurrent();
     }
 
-    function update(payload) {
-        if (!payload) {
+
+    function update(
+        payload
+    ) {
+        if (
+            !payload
+        ) {
             return;
         }
 
@@ -955,7 +1159,8 @@
             payload;
 
         if (
-            overlay?.classList
+            overlay
+                ?.classList
                 .contains(
                     "is-open"
                 )
@@ -964,21 +1169,29 @@
         }
     }
 
+
     function close() {
-        if (!overlay) {
+        if (
+            !overlay
+        ) {
             return;
         }
 
-        overlay.classList.remove(
-            "is-open"
-        );
+        overlay
+            .classList
+            .remove(
+                "is-open"
+            );
 
-        document.body.classList.remove(
-            "base-service-modal-open"
-        );
+        document.body
+            .classList
+            .remove(
+                "base-service-modal-open"
+            );
 
-        if (countdownTimer) {
-
+        if (
+            countdownTimer
+        ) {
             clearInterval(
                 countdownTimer
             );
@@ -988,14 +1201,17 @@
         }
     }
 
+
     function isOpen() {
         return Boolean(
-            overlay?.classList
+            overlay
+                ?.classList
                 .contains(
                     "is-open"
                 )
         );
     }
+
 
     window.BaseServicesUi = {
         open,
