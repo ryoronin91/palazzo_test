@@ -1,0 +1,685 @@
+// ============================================================
+// PALAZZO ETERNO
+// BASE SERVICES - MANAGER
+//
+// Coordina:
+// - services.json
+// - API Supabase
+// - popup
+// - aree sulla mappa
+// - token NPC
+// - stato grafico costruzione / attività
+//
+// Espone:
+//   initializeBaseServices()
+//   checkBaseServiceArea(x, y)
+// ============================================================
+
+(() => {
+    "use strict";
+
+    const CONFIG_URL = "services.json";
+    const MAP_ID = "dungeon-map";
+
+    const MAP_COLUMNS = 27;
+    const MAP_ROWS = 36;
+
+    const STATE_REFRESH_MS = 30000;
+
+    let services = [];
+    let initialized = false;
+    let refreshTimer = null;
+    let resizeBound = false;
+    let activeAreaServiceId = null;
+
+    const stateByService = new Map();
+    const visualByService = new Map();
+
+    function requireDependencies() {
+        if (!window.BaseServicesApi) {
+            throw new Error(
+                "base-services-api.js non caricato."
+            );
+        }
+
+        if (!window.BaseServicesUi) {
+            throw new Error(
+                "base-services-ui.js non caricato."
+            );
+        }
+    }
+
+    async function loadConfig() {
+        const response = await fetch(
+            CONFIG_URL,
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Impossibile caricare services.json."
+            );
+        }
+
+        const data = await response.json();
+
+        services = Array.isArray(
+            data?.services
+        )
+            ? data.services
+            : [];
+
+        console.log(
+            "[BASE SERVICES] Configurati:",
+            services.map(
+                service => service.id
+            )
+        );
+    }
+
+    function findService(serviceId) {
+        return (
+            services.find(
+                service =>
+                    service.id === serviceId
+            ) || null
+        );
+    }
+
+    function findServiceAt(x, y) {
+        const px = Number(x);
+        const py = Number(y);
+
+        return (
+            services.find(service => {
+                const area =
+                    service.area;
+
+                if (!area) {
+                    return false;
+                }
+
+                return (
+                    px >= Number(area.x) &&
+                    px <
+                        Number(area.x) +
+                        Number(area.width) &&
+                    py >= Number(area.y) &&
+                    py <
+                        Number(area.y) +
+                        Number(area.height)
+                );
+            }) || null
+        );
+    }
+
+    async function fetchServiceState(
+        serviceId
+    ) {
+        const payload =
+            await window
+                .BaseServicesApi
+                .getServiceState(
+                    serviceId
+                );
+
+        stateByService.set(
+            serviceId,
+            payload
+        );
+
+        renderServiceVisual(
+            serviceId
+        );
+
+        if (
+            activeAreaServiceId ===
+                serviceId &&
+            window.BaseServicesUi
+                .isOpen()
+        ) {
+            window.BaseServicesUi
+                .update(
+                    payload
+                );
+        }
+
+        return payload;
+    }
+
+    async function refreshAllStates() {
+        const results =
+            await Promise.allSettled(
+                services.map(
+                    service =>
+                        fetchServiceState(
+                            service.id
+                        )
+                )
+            );
+
+        results.forEach(
+            (result, index) => {
+                if (
+                    result.status ===
+                    "rejected"
+                ) {
+                    console.warn(
+                        "[BASE SERVICES] Stato non aggiornato:",
+                        services[index]
+                            ?.id,
+                        result.reason
+                    );
+                }
+            }
+        );
+    }
+
+    function getMapMetrics() {
+        const map =
+            document.getElementById(
+                MAP_ID
+            );
+
+        if (!map) {
+            return null;
+        }
+
+        const rect =
+            map.getBoundingClientRect();
+
+        if (
+            rect.width <= 0 ||
+            rect.height <= 0
+        ) {
+            return null;
+        }
+
+        return {
+            map,
+            cellWidth:
+                rect.width /
+                MAP_COLUMNS,
+            cellHeight:
+                rect.height /
+                MAP_ROWS
+        };
+    }
+
+    function ensureVisualElements(
+        service
+    ) {
+        const metrics =
+            getMapMetrics();
+
+        if (!metrics) {
+            return null;
+        }
+
+        let visual =
+            visualByService.get(
+                service.id
+            );
+
+        if (!visual) {
+            const npc =
+                document.createElement(
+                    "img"
+                );
+
+            npc.className =
+                "base-service-npc";
+
+            npc.dataset.serviceId =
+                service.id;
+
+            npc.alt =
+                service.npc?.alt ||
+                service.name ||
+                service.id;
+
+            npc.draggable = false;
+
+            const building =
+                document.createElement(
+                    "div"
+                );
+
+            building.className =
+                "base-service-building-marker";
+
+            building.dataset.serviceId =
+                service.id;
+
+            metrics.map.appendChild(
+                building
+            );
+
+            metrics.map.appendChild(
+                npc
+            );
+
+            visual = {
+                npc,
+                building
+            };
+
+            visualByService.set(
+                service.id,
+                visual
+            );
+        }
+
+        return visual;
+    }
+
+    function positionVisual(
+        service,
+        visual
+    ) {
+        const metrics =
+            getMapMetrics();
+
+        if (!metrics) {
+            return;
+        }
+
+        const npc =
+            service.npc;
+
+        if (npc) {
+            visual.npc.style.left =
+                `${
+                    Number(npc.x) *
+                    metrics.cellWidth
+                }px`;
+
+            visual.npc.style.top =
+                `${
+                    Number(npc.y) *
+                    metrics.cellHeight
+                }px`;
+
+            visual.npc.style.width =
+                `${
+                    Number(
+                        npc.width || 1
+                    ) *
+                    metrics.cellWidth
+                }px`;
+
+            visual.npc.style.height =
+                `${
+                    Number(
+                        npc.height || 1
+                    ) *
+                    metrics.cellHeight
+                }px`;
+
+            visual.npc.style.zIndex =
+                String(
+                    npc.zIndex || 13
+                );
+        }
+
+        const area =
+            service.area;
+
+        if (area) {
+            visual.building.style.left =
+                `${
+                    Number(area.x) *
+                    metrics.cellWidth
+                }px`;
+
+            visual.building.style.top =
+                `${
+                    Number(area.y) *
+                    metrics.cellHeight
+                }px`;
+
+            visual.building.style.width =
+                `${
+                    Number(area.width) *
+                    metrics.cellWidth
+                }px`;
+
+            visual.building.style.height =
+                `${
+                    Number(area.height) *
+                    metrics.cellHeight
+                }px`;
+        }
+    }
+
+    function renderServiceVisual(
+        serviceId
+    ) {
+        const service =
+            findService(
+                serviceId
+            );
+
+        const payload =
+            stateByService.get(
+                serviceId
+            );
+
+        if (
+            !service ||
+            !payload
+        ) {
+            return;
+        }
+
+        const visual =
+            ensureVisualElements(
+                service
+            );
+
+        if (!visual) {
+            return;
+        }
+
+        const status =
+            payload.service?.status ||
+            "unbuilt";
+
+        if (
+            service.npc?.image &&
+            visual.npc.src !==
+                new URL(
+                    service.npc.image,
+                    document.baseURI
+                ).href
+        ) {
+            visual.npc.src =
+                service.npc.image;
+        }
+
+        visual.npc.style.display =
+            status === "active"
+                ? "block"
+                : "none";
+
+        visual.building.className =
+            "base-service-building-marker " +
+            `is-${status}`;
+
+        visual.building.innerHTML =
+            status === "building"
+                ? `
+                    <span
+                        class="base-service-map-badge"
+                    >
+                        ⚒
+                    </span>
+                `
+                : "";
+
+        positionVisual(
+            service,
+            visual
+        );
+    }
+
+    function positionAllVisuals() {
+        services.forEach(
+            service => {
+                const visual =
+                    visualByService.get(
+                        service.id
+                    );
+
+                if (visual) {
+                    positionVisual(
+                        service,
+                        visual
+                    );
+                }
+            }
+        );
+    }
+
+    async function contribute(
+        serviceId,
+        itemId,
+        quantity
+    ) {
+        const payload =
+            await window
+                .BaseServicesApi
+                .contribute(
+                    serviceId,
+                    itemId,
+                    quantity
+                );
+
+        stateByService.set(
+            serviceId,
+            payload
+        );
+
+        renderServiceVisual(
+            serviceId
+        );
+
+        return payload;
+    }
+
+    async function openService(
+        service
+    ) {
+        let payload =
+            stateByService.get(
+                service.id
+            );
+
+        try {
+            payload =
+                await fetchServiceState(
+                    service.id
+                );
+        } catch (error) {
+            console.error(
+                "[BASE SERVICES] Apertura servizio:",
+                error
+            );
+
+            if (
+                typeof setMessage ===
+                "function"
+            ) {
+                setMessage(
+                    error?.message ||
+                    "Impossibile caricare il servizio.",
+                    true
+                );
+            }
+
+            return;
+        }
+
+        window.BaseServicesUi.open(
+            service,
+            payload,
+            {
+                onContribute:
+                    (
+                        itemId,
+                        quantity
+                    ) =>
+                        contribute(
+                            service.id,
+                            itemId,
+                            quantity
+                        ),
+
+                onRefresh:
+                    async () => {
+                        const refreshed =
+                            await fetchServiceState(
+                                service.id
+                            );
+
+                        window.BaseServicesUi
+                            .update(
+                                refreshed
+                            );
+
+                        return refreshed;
+                    }
+            }
+        );
+    }
+
+    async function checkBaseServiceArea(
+        x,
+        y
+    ) {
+        if (!initialized) {
+            return;
+        }
+
+        const service =
+            findServiceAt(
+                x,
+                y
+            );
+
+        if (!service) {
+            activeAreaServiceId =
+                null;
+
+            return;
+        }
+
+        if (
+            activeAreaServiceId ===
+            service.id
+        ) {
+            return;
+        }
+
+        activeAreaServiceId =
+            service.id;
+
+        await openService(
+            service
+        );
+    }
+
+    function handleRealtimeChange(
+        change
+    ) {
+        const newRow =
+            change?.payload?.new || {};
+
+        const oldRow =
+            change?.payload?.old || {};
+
+        const serviceId =
+            newRow.service_key ||
+            oldRow.service_key;
+
+        if (
+            serviceId &&
+            findService(serviceId)
+        ) {
+            fetchServiceState(
+                serviceId
+            ).catch(error => {
+                console.warn(
+                    "[BASE SERVICES] Aggiornamento Realtime:",
+                    error
+                );
+            });
+
+            return;
+        }
+
+        refreshAllStates()
+            .catch(error => {
+                console.warn(
+                    "[BASE SERVICES] Refresh Realtime:",
+                    error
+                );
+            });
+    }
+
+    async function initializeBaseServices() {
+        if (initialized) {
+            return;
+        }
+
+        requireDependencies();
+
+        await loadConfig();
+
+        await refreshAllStates();
+
+        await window
+            .BaseServicesApi
+            .subscribe(
+                handleRealtimeChange
+            );
+
+        if (!resizeBound) {
+            window.addEventListener(
+                "resize",
+                positionAllVisuals
+            );
+
+            resizeBound = true;
+        }
+
+        refreshTimer =
+            window.setInterval(
+                () => {
+                    refreshAllStates()
+                        .catch(error => {
+                            console.warn(
+                                "[BASE SERVICES] Refresh periodico:",
+                                error
+                            );
+                        });
+                },
+                STATE_REFRESH_MS
+            );
+
+        initialized = true;
+
+        console.log(
+            "[BASE SERVICES] Sistema inizializzato."
+        );
+    }
+
+    function destroyBaseServices() {
+        if (refreshTimer) {
+            clearInterval(
+                refreshTimer
+            );
+
+            refreshTimer = null;
+        }
+
+        window.BaseServicesApi
+            ?.unsubscribe();
+
+        initialized = false;
+    }
+
+    window.initializeBaseServices =
+        initializeBaseServices;
+
+    window.checkBaseServiceArea =
+        checkBaseServiceArea;
+
+    window.refreshBaseServices =
+        refreshAllStates;
+
+    window.destroyBaseServices =
+        destroyBaseServices;
+})();

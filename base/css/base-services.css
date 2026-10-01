@@ -1,0 +1,435 @@
+/* ============================================================
+   PALAZZO ETERNO
+   LIVELLO BASE - SERVIZI
+   ============================================================ */
+
+body.base-service-modal-open {
+    overflow: hidden;
+}
+
+.base-service-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    background: rgba(0, 0, 0, 0.72);
+
+    backdrop-filter: blur(3px);
+}
+
+.base-service-overlay.is-open {
+    display: flex;
+}
+
+.base-service-modal {
+    position: relative;
+
+    width: min(560px, 100%);
+    max-height: min(760px, 88vh);
+
+    overflow-y: auto;
+
+    padding: 26px;
+
+    border: 1px solid rgba(207, 173, 105, 0.62);
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(33, 28, 24, 0.98),
+            rgba(16, 14, 13, 0.99)
+        );
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.7),
+        inset 0 0 35px rgba(191, 145, 73, 0.05);
+
+    color: #efe4cb;
+}
+
+.base-service-close {
+    position: absolute;
+
+    top: 10px;
+    right: 12px;
+
+    width: 36px;
+    height: 36px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #d7c19a;
+
+    font-size: 28px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.base-service-header {
+    padding-right: 34px;
+    margin-bottom: 18px;
+}
+
+.base-service-eyebrow {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #a9936d;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 0.15em;
+}
+
+.base-service-header h2 {
+    margin: 0;
+
+    color: #f2d79a;
+
+    font-size: clamp(24px, 5vw, 34px);
+}
+
+.base-service-description,
+.base-service-note,
+.base-service-warning {
+    line-height: 1.55;
+}
+
+.base-service-status {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 28px;
+
+    margin-bottom: 14px;
+
+    padding: 5px 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+.base-service-status-unbuilt {
+    background: rgba(107, 89, 63, 0.32);
+}
+
+.base-service-status-building {
+    background: rgba(173, 121, 48, 0.28);
+}
+
+.base-service-status-active {
+    background: rgba(79, 132, 80, 0.28);
+}
+
+.base-service-requirements {
+    display: grid;
+
+    gap: 14px;
+}
+
+.base-service-requirement {
+    padding: 14px;
+
+    border: 1px solid rgba(214, 185, 126, 0.18);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.base-service-requirement.is-complete {
+    opacity: 0.75;
+}
+
+.base-service-requirement-head {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 9px;
+}
+
+.base-service-progress {
+    height: 8px;
+
+    overflow: hidden;
+
+    margin-bottom: 12px;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.base-service-progress > span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8f6b36,
+            #d6b46f
+        );
+
+    transition: width 180ms ease;
+}
+
+.base-service-contribution-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(80px, 120px)
+        1fr;
+
+    gap: 10px;
+}
+
+.base-service-quantity {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    border: 1px solid rgba(207, 173, 105, 0.38);
+    border-radius: 6px;
+
+    outline: none;
+
+    background: rgba(0, 0, 0, 0.32);
+
+    color: #fff3d7;
+
+    font: inherit;
+}
+
+.base-service-quantity:focus {
+    border-color: rgba(231, 193, 112, 0.8);
+}
+
+.base-service-contribute {
+    padding: 10px 14px;
+
+    border: 1px solid rgba(216, 181, 110, 0.55);
+    border-radius: 6px;
+
+    background: rgba(118, 83, 39, 0.45);
+
+    color: #f4e2bb;
+
+    font: inherit;
+    font-weight: 800;
+
+    letter-spacing: 0.04em;
+
+    cursor: pointer;
+}
+
+.base-service-contribute:hover {
+    background: rgba(148, 103, 47, 0.58);
+}
+
+.base-service-contribute:disabled {
+    opacity: 0.5;
+
+    cursor: wait;
+}
+
+.base-service-countdown-block {
+    display: grid;
+
+    gap: 5px;
+
+    margin: 12px 0 18px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(213, 179, 108, 0.24);
+    border-radius: 8px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.base-service-countdown-block span {
+    color: #b9a98c;
+
+    font-size: 12px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.1em;
+}
+
+.base-service-live-countdown {
+    color: #f0d18e;
+
+    font-size: clamp(30px, 9vw, 46px);
+
+    font-variant-numeric: tabular-nums;
+}
+
+.base-service-reserve {
+    margin-bottom: 18px;
+
+    text-align: center;
+
+    color: #cbbda3;
+}
+
+.base-service-maintenance-box {
+    display: grid;
+
+    gap: 9px;
+
+    margin-top: 16px;
+
+    padding: 14px;
+
+    border: 1px solid rgba(213, 179, 108, 0.2);
+    border-radius: 8px;
+}
+
+.base-service-warning {
+    margin-top: 16px;
+
+    color: #d5a69a;
+
+    font-size: 13px;
+}
+
+.base-service-note {
+    margin-top: 15px;
+
+    color: #b9aa91;
+
+    font-size: 13px;
+}
+
+.base-service-feedback {
+    display: none;
+
+    margin-top: 14px;
+
+    padding: 9px 12px;
+
+    border-radius: 6px;
+
+    background: rgba(69, 112, 75, 0.3);
+
+    color: #d9eadb;
+}
+
+.base-service-feedback.is-visible {
+    display: block;
+}
+
+.base-service-feedback.is-error {
+    background: rgba(132, 59, 55, 0.34);
+
+    color: #f0cbc7;
+}
+
+
+/* ============================================================
+   ELEMENTI SOPRA LA MAPPA
+   ============================================================ */
+
+.base-service-npc,
+.base-service-building-marker {
+    position: absolute;
+
+    box-sizing: border-box;
+
+    pointer-events: none;
+
+    user-select: none;
+}
+
+.base-service-npc {
+    display: none;
+
+    object-fit: contain;
+}
+
+.base-service-building-marker {
+    z-index: 12;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.base-service-building-marker.is-building {
+    display: flex;
+}
+
+.base-service-map-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: clamp(24px, 4vw, 42px);
+    height: clamp(24px, 4vw, 42px);
+
+    border: 1px solid rgba(229, 191, 113, 0.7);
+    border-radius: 50%;
+
+    background: rgba(26, 22, 18, 0.88);
+
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.45);
+
+    font-size: clamp(14px, 2.5vw, 24px);
+}
+
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 560px) {
+
+    .base-service-overlay {
+        align-items: flex-end;
+
+        padding: 10px;
+    }
+
+    .base-service-modal {
+        width: 100%;
+        max-height: 86vh;
+
+        padding: 20px 16px;
+    }
+
+    .base-service-contribution-row {
+        grid-template-columns:
+            96px
+            1fr;
+    }
+}
