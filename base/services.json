@@ -3,7 +3,7 @@
         {
             "id": "runografo",
             "name": "Runografo",
-            "description": "Un antico artefice di rune può essere evocato in quest'area.",
+            "description": "Il Runografo è un artigiano che vende e potenzia le pergamene abilità.",
 
             "area": {
                 "x": 17,

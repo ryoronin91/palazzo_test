@@ -76,8 +76,10 @@ body.base-service-modal-open {
 }
 
 .base-service-header {
-    padding-right: 34px;
+    padding: 0 34px;
     margin-bottom: 18px;
+
+    text-align: center;
 }
 
 .base-service-eyebrow {
@@ -98,7 +100,9 @@ body.base-service-modal-open {
 
     color: #f2d79a;
 
-    font-size: clamp(24px, 5vw, 34px);
+    font-size: clamp(26px, 5vw, 36px);
+
+    text-align: center;
 }
 
 .base-service-description,
@@ -140,6 +144,9 @@ body.base-service-modal-open {
 
 .base-service-requirements {
     display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
     gap: 14px;
 }
@@ -321,11 +328,15 @@ body.base-service-modal-open {
 }
 
 .base-service-note {
-    margin-top: 15px;
+    margin-top: 14px;
 
-    color: #b9aa91;
+    color: #c8b99d;
 
     font-size: 13px;
+
+    line-height: 1.6;
+
+    text-align: center;
 }
 
 .base-service-feedback {
@@ -432,4 +443,9 @@ body.base-service-modal-open {
             96px
             1fr;
     }
+
+    .base-service-requirements {
+    grid-template-columns: 1fr;
+}
+
 }

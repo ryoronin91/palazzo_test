@@ -383,12 +383,21 @@
             </div>
 
             <p
-                class="base-service-note"
-            >
-                Tutti i giocatori possono contribuire.
-                Quando ogni requisito sarà completo,
-                inizierà automaticamente la costruzione.
-            </p>
+    class="base-service-note"
+>
+    Tutti i giocatori possono contribuire alla costruzione.
+    Quando tutti i requisiti saranno completati,
+    inizierà l'evocazione del Runografo.
+</p>
+
+<p
+    class="base-service-note"
+>
+    La costruzione richiederà 1 ora.
+    Una volta evocato, il Runografo resterà disponibile
+    solo per un tempo limitato, a meno che i giocatori
+    non continuino a riempire la sua riserva di monete.
+</p>
         `;
     }
 
