@@ -100,15 +100,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupBaseChat();
         await loadBaseChatHistory();
 
-        // ----------------------------------------------------
-        // POSIZIONE PERSISTENTE
-        // ----------------------------------------------------
+ // ----------------------------------------------------
+// POSIZIONE PERSISTENTE
+// ----------------------------------------------------
 
-        await initializeBasePlayer();
+await initializeBasePlayer();
 
-        setupBaseCamera();
-        setupBaseNoticeboard();
-        setupBaseMovement();
+
+// ----------------------------------------------------
+// SERVIZI DEL LIVELLO BASE
+// ----------------------------------------------------
+
+if (
+    typeof initializeBaseServices ===
+    "function"
+) {
+    await initializeBaseServices();
+}
+
+
+setupBaseCamera();
+setupBaseNoticeboard();
+setupBaseMovement();
 
         // ----------------------------------------------------
         // EVENTI SULLA CASELLA DI ARRIVO
@@ -155,6 +168,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
             checkBaseTeleportEvent();
         }
+
+// ----------------------------------------------------
+// SERVIZIO PRESENTE SULLA CASELLA DI ARRIVO
+// ----------------------------------------------------
+
+if (
+    typeof checkBaseServiceArea ===
+    "function"
+) {
+    await checkBaseServiceArea(
+        basePlayerX,
+        basePlayerY
+    );
+}
 
         // ----------------------------------------------------
         // PERSONAGGI ONLINE / REALTIME
@@ -1910,25 +1937,42 @@ function moveBasePlayer(dx, dy) {
     scheduleBasePositionSave();
     updateBasePresence();
 
-    if (
-        typeof checkNearbyBaseCombatEvents ===
-        "function"
-    ) {
-        checkNearbyBaseCombatEvents();
-    }
+ if (
+    typeof checkBaseTeleportEvent ===
+    "function"
+) {
+    checkBaseTeleportEvent();
+}
 
-    if (
-        typeof checkBaseTeleportEvent ===
-        "function"
-    ) {
-        checkBaseTeleportEvent();
-    }
 
-    setMessage(
-        `Ti muovi nel Livello Base. X ${basePlayerX} · Y ${basePlayerY}`
+// ========================================================
+// SERVIZI DEL LIVELLO BASE
+// ========================================================
+//
+// Controlla se il PG è entrato nell'area di uno dei
+// servizi configurati in services.json.
+//
+// Il sistema servizi decide autonomamente quale popup
+// mostrare e quale stato del servizio rappresentare.
+// ========================================================
+
+if (
+    typeof checkBaseServiceArea ===
+    "function"
+) {
+    checkBaseServiceArea(
+        basePlayerX,
+        basePlayerY
     );
+}
 
-    return true;
+
+setMessage(
+    `Ti muovi nel Livello Base. X ${basePlayerX} · Y ${basePlayerY}`
+);
+
+return true;
+
 }
 
 
@@ -3653,6 +3697,13 @@ window.addEventListener(
             }
 
         }
+
+        if (
+    typeof destroyBaseServices ===
+    "function"
+) {
+    destroyBaseServices();
+}
 
     }
 );
