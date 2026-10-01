@@ -14,7 +14,7 @@
 
             "npc": {
                 "x": 18,
-                "y": 20,
+                "y": 21,
                 "width": 1,
                 "height": 1,
                 "image": "../immagini/eventi/vendor.png",

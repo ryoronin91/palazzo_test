@@ -588,6 +588,21 @@
                 ?.status ||
             "unbuilt";
 
+            if (
+    service.id === "runografo"
+) {
+    const carpet =
+        document.querySelector(
+            '[data-decoration-id="tappeto_runografo"]'
+        );
+
+    if (carpet) {
+        carpet.src =
+            status === "active"
+                ? "immagini/tappeto_blu.png"
+                : "immagini/tappetoX.png";
+    }
+}
 
         if (
             service
