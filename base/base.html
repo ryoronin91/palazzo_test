@@ -29,6 +29,11 @@
         href="css/base.css?v=4"
     >
 
+    <link
+        rel="stylesheet"
+        href="css/base-services.css?v=1"
+    >
+
     <style>
         .dungeon-player-coordinates {
             margin-top: 8px;
@@ -74,7 +79,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="../js/config.js?v=10"></script>
+    <script src="../js/config.js?v=10"></script>
 
 </head>
 
@@ -264,7 +269,8 @@
                                 type="text"
                                 maxlength="300"
                                 autocomplete="off"
-                                placeholder="Chat del Livello Base non ancora attiva" disabled
+                                placeholder="Chat del Livello Base non ancora attiva"
+                                disabled
                             >
 
 
@@ -937,7 +943,8 @@
                             id="character-notes"
                             class="dungeon-notes"
                             maxlength="3000"
-                            placeholder="Le note saranno collegate al Livello Base in seguito..." disabled
+                            placeholder="Le note saranno collegate al Livello Base in seguito..."
+                            disabled
                         ></textarea>
 
 
@@ -994,6 +1001,7 @@
             </button>
 
             <div class="base-noticeboard-header">
+
                 <div class="base-noticeboard-kicker">
                     PALAZZO ETERNO
                 </div>
@@ -1001,12 +1009,14 @@
                 <h2 id="base-noticeboard-title">
                     BACHECA DELLA BASE
                 </h2>
+
             </div>
 
             <nav
                 class="base-noticeboard-tabs"
                 aria-label="Sezioni bacheca"
             >
+
                 <button
                     class="base-noticeboard-tab active"
                     type="button"
@@ -1030,9 +1040,11 @@
                 >
                     AVVISI
                 </button>
+
             </nav>
 
             <div class="base-noticeboard-content">
+
                 <h3 id="base-noticeboard-content-title">
                     COSA C'È DI NUOVO
                 </h3>
@@ -1041,18 +1053,43 @@
                     id="base-noticeboard-content-list"
                     class="base-noticeboard-content-list"
                 ></ul>
+
             </div>
 
         </section>
+
     </div>
 
 
     <!-- =====================================================
-         SCRIPT
+         SCRIPT PRINCIPALI LIVELLO BASE
     ====================================================== -->
 
     <script src="js/base.js?v=8"></script>
     <script src="js/eventi_base.js?v=1"></script>
+
+
+    <!-- =====================================================
+         SISTEMA SERVIZI LIVELLO BASE
+
+         Ordine obbligatorio:
+         1. API
+         2. UI
+         3. MANAGER
+    ====================================================== -->
+
+    <script
+        src="js/services/base-services-api.js?v=1"
+    ></script>
+
+    <script
+        src="js/services/base-services-ui.js?v=1"
+    ></script>
+
+    <script
+        src="js/services/base-services.js?v=1"
+    ></script>
+
 
 </body>
 
