@@ -32,9 +32,6 @@
     const RUNOGRAFO_SERVICE_ID =
         "runografo";
 
-    const RUNOGRAFO_PAGE =
-        "services/runografo/runografo.html";
-
     let services = [];
     let initialized = false;
     let refreshTimer = null;
@@ -374,27 +371,6 @@
             npc.draggable =
                 false;
 
-            npc.style.pointerEvents =
-                "auto";
-
-            npc.style.cursor =
-                "pointer";
-
-            npc.addEventListener(
-                "click",
-                event => {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    handleServiceNpcClick(
-                        service.id
-                    );
-
-                }
-            );
-
-
             const building =
                 document.createElement(
                     "div"
@@ -678,16 +654,10 @@
                 : "none";
 
         visual.npc.style.pointerEvents =
-            status ===
-            "active"
-                ? "auto"
-                : "none";
+            "none";
 
         visual.npc.style.cursor =
-            status ===
-            "active"
-                ? "pointer"
-                : "default";
+            "default";
 
 
         visual.building.className =
@@ -797,200 +767,20 @@
     }
 
 
-    function getCurrentBasePlayerPosition() {
-
-        let x = null;
-        let y = null;
-
-        try {
-
-            if (
-                typeof basePlayerX !==
-                "undefined"
-            ) {
-
-                x =
-                    Number(
-                        basePlayerX
-                    );
-            }
-
-            if (
-                typeof basePlayerY !==
-                "undefined"
-            ) {
-
-                y =
-                    Number(
-                        basePlayerY
-                    );
-            }
-
-        } catch (_) {
-
-            // Il manager rimane indipendente da base.js.
-        }
-
-        if (
-            !Number.isFinite(x) ||
-            !Number.isFinite(y)
-        ) {
-
-            return null;
-        }
-
-        return {
-            x,
-            y
-        };
-    }
-
-
-    function isPlayerAdjacentToServiceNpc(
-        service
-    ) {
-
-        const player =
-            getCurrentBasePlayerPosition();
-
-        const npc =
-            service?.npc;
-
-        if (
-            !player ||
-            !npc
-        ) {
-
-            return false;
-        }
-
-        const dx =
-            Math.abs(
-                player.x -
-                Number(
-                    npc.x
-                )
-            );
-
-        const dy =
-            Math.abs(
-                player.y -
-                Number(
-                    npc.y
-                )
-            );
-
-        return (
-            dx + dy ===
-            1
-        );
-    }
-
-
-    async function handleServiceNpcClick(
+    function isBaseServiceActive(
         serviceId
     ) {
 
-        const service =
-            findService(
-                serviceId
-            );
-
-        if (!service) {
-            return;
-        }
-
-        let payload =
+        const payload =
             stateByService.get(
                 serviceId
             );
 
-        try {
-
-            payload =
-                await fetchServiceState(
-                    serviceId
-                );
-
-        } catch (error) {
-
-            console.error(
-                "[BASE SERVICES] Click NPC:",
-                error
-            );
-
-            if (
-                typeof setMessage ===
-                "function"
-            ) {
-
-                setMessage(
-                    error?.message ||
-                    "Impossibile interagire con il servizio.",
-                    true
-                );
-            }
-
-            return;
-        }
-
-        const status =
+        return (
             payload
                 ?.service
-                ?.status ||
-            "unbuilt";
-
-        if (
-            status !==
+                ?.status ===
             "active"
-        ) {
-
-            if (
-                typeof setMessage ===
-                "function"
-            ) {
-
-                setMessage(
-                    `${service.name || "Il servizio"} non è ancora disponibile.`
-                );
-            }
-
-            return;
-        }
-
-        if (
-            !isPlayerAdjacentToServiceNpc(
-                service
-            )
-        ) {
-
-            if (
-                typeof setMessage ===
-                "function"
-            ) {
-
-                setMessage(
-                    `Avvicinati a ${service.name || "questo servizio"} per interagire.`
-                );
-            }
-
-            return;
-        }
-
-        if (
-            service.id ===
-            RUNOGRAFO_SERVICE_ID
-        ) {
-
-            window.location.href =
-                RUNOGRAFO_PAGE;
-
-            return;
-        }
-
-        console.warn(
-            "[BASE SERVICES] Nessuna pagina associata al servizio:",
-            service.id
         );
     }
 
@@ -1355,6 +1145,9 @@
 
     window.checkBaseServiceArea =
         checkBaseServiceArea;
+
+    window.isBaseServiceActive =
+        isBaseServiceActive;
 
     window.refreshBaseServices =
         refreshAllStates;

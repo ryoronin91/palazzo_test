@@ -42,6 +42,20 @@ let baseVendorEntering =
 
 
 // ============================================================
+// RUNOGRAFO
+// ============================================================
+
+const BASE_RUNOGRAFO_X = 18;
+const BASE_RUNOGRAFO_Y = 21;
+
+const BASE_RUNOGRAFO_PAGE =
+    "services/runografo/runografo.html";
+
+let baseRunografoEntering =
+    false;
+
+
+// ============================================================
 // DATABASE / REALTIME LIVELLO BASE
 // ============================================================
 
@@ -1188,6 +1202,151 @@ async function enterBaseVendor() {
 
 
 // ============================================================
+// RUNOGRAFO
+// ============================================================
+
+function isBaseRunografoCell(
+    x,
+    y
+) {
+
+    return (
+        Number(x) ===
+            BASE_RUNOGRAFO_X
+        &&
+        Number(y) ===
+            BASE_RUNOGRAFO_Y
+    );
+}
+
+
+function isBaseRunografoActive() {
+
+    if (
+        typeof isBaseServiceActive !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+    return (
+        isBaseServiceActive(
+            "runografo"
+        ) ===
+        true
+    );
+}
+
+
+async function enterBaseRunografo() {
+
+    if (
+        baseRunografoEntering ||
+        !character
+    ) {
+
+        return;
+    }
+
+    if (
+        !isBaseRunografoActive()
+    ) {
+
+        return;
+    }
+
+    baseRunografoEntering =
+        true;
+
+    setMessage(
+        "Ti avvicini al Runografo..."
+    );
+
+    try {
+
+        if (
+            basePositionSaveTimer
+        ) {
+
+            clearTimeout(
+                basePositionSaveTimer
+            );
+
+            basePositionSaveTimer =
+                null;
+        }
+
+        basePositionSavePending =
+            false;
+
+        await flushBasePositionSave();
+
+        const {
+            error
+        } =
+            await db
+                .from(
+                    "characters"
+                )
+                .update({
+                    base_x:
+                        Number(
+                            basePlayerX
+                        ),
+
+                    base_y:
+                        Number(
+                            basePlayerY
+                        ),
+
+                    current_location:
+                        "runografo"
+                })
+                .eq(
+                    "id",
+                    character.id
+                );
+
+        if (error) {
+            throw error;
+        }
+
+        character.base_x =
+            Number(
+                basePlayerX
+            );
+
+        character.base_y =
+            Number(
+                basePlayerY
+            );
+
+        character.current_location =
+            "runografo";
+
+        window.location.href =
+            BASE_RUNOGRAFO_PAGE;
+
+    } catch (error) {
+
+        console.error(
+            "Errore ingresso Runografo dalla Base:",
+            error
+        );
+
+        baseRunografoEntering =
+            false;
+
+        setMessage(
+            "Non riesco ad aprire il Runografo. Riprova.",
+            true
+        );
+    }
+}
+
+
+// ============================================================
 // BACHECA - INTERAZIONE
 // ============================================================
 
@@ -1843,6 +2002,36 @@ function moveBasePlayer(dx, dy) {
         )
     ) {
         enterBaseVendor();
+
+        return false;
+    }
+
+
+    // ========================================================
+    // RUNOGRAFO
+    // ========================================================
+    //
+    // Quando il servizio è ACTIVE, la casella X18 Y21
+    // è occupata dal Runografo.
+    //
+    // Come per Mano di Scimmia, il PG non può sovrapporsi
+    // al token: tentare di entrare nella sua casella apre
+    // direttamente il servizio.
+    //
+    // Quando il servizio non è ACTIVE, la casella torna
+    // a comportarsi normalmente.
+    // ========================================================
+
+    if (
+        isBaseRunografoCell(
+            newX,
+            newY
+        )
+        &&
+        isBaseRunografoActive()
+    ) {
+
+        enterBaseRunografo();
 
         return false;
     }
