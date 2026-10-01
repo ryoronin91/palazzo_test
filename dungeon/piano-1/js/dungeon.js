@@ -880,7 +880,7 @@ function renderDungeonLeaderboard(
                                     const resolvedIconPath =
 
                                     rawIconPath.startsWith("immagini/")
-                                            ? '../../${rawIconPath}'
+                                            ? "../../" + rawIconPath
                                             : rawIconPath;
 
                                     const iconPath =
