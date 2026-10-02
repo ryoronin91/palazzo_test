@@ -1068,7 +1068,7 @@ function positionBaseStaticDecorations() {
     decoration.id ===
     "locanda"
 ) {
-    const scale = 1.08;
+    const scale = 1.12;
 
     element.style.transform =
         `scale(${scale})`;
