@@ -1063,6 +1063,19 @@ function positionBaseStaticDecorations() {
                 String(
                     decoration.zIndex ?? 6
                 );
+
+                if (
+    decoration.id ===
+    "locanda"
+) {
+    const scale = 1.08;
+
+    element.style.transform =
+        `scale(${scale})`;
+
+    element.style.transformOrigin =
+        "center center";
+}
         }
     );
 }
