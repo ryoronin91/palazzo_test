@@ -1092,7 +1092,7 @@ function positionBaseStaticDecorations() {
     const scale = 1.12;
 
     element.style.transform =
-        `scale(${scale})`;
+        `translateY(-6px) scale(${scale})`;
 
     element.style.transformOrigin =
         "center center";
