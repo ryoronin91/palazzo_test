@@ -32,6 +32,9 @@
     const RUNOGRAFO_SERVICE_ID =
         "runografo";
 
+    const LOCANDA_SERVICE_ID =
+        "locanda";
+
     let services = [];
     let initialized = false;
     let refreshTimer = null;
@@ -619,6 +622,26 @@
                     status === "active"
                         ? "immagini/tappeto_blu.png"
                         : "immagini/tappetoX.png";
+            }
+        }
+
+
+        if (
+            service.id ===
+            LOCANDA_SERVICE_ID
+        ) {
+
+            const locanda =
+                document.querySelector(
+                    '[data-decoration-id="locanda"]'
+                );
+
+            if (locanda) {
+
+                locanda.src =
+                    status === "active"
+                        ? "immagini/locanda.png"
+                        : "immagini/locandaX.png";
             }
         }
 
