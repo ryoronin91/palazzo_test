@@ -19,7 +19,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 12,
         y: 4,
         encounter_id: "combat_1",
-        token: "../../immagini/eventi/combat_goblin.png"
+        token: "immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -27,7 +27,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 7,
         y: 11,
         encounter_id: "combat_2",
-        token: "../../immagini/eventi/combat_goblin.png"
+        token: "immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -35,7 +35,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 13,
         y: 14,
         encounter_id: "combat_3",
-        token: "../../immagini/eventi/combat_goblin.png"
+        token: "immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -43,7 +43,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 19,
         y: 11,
         encounter_id: "combat_4",
-        token: "../../immagini/eventi/combat_goblin.png"
+        token: "immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -51,7 +51,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 11,
         y: 20,
         encounter_id: "combat_5",
-        token: "../../immagini/eventi/combat_goblin.png"
+        token: "immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -59,7 +59,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 19,
         y: 20,
         encounter_id: "combat_boss",
-        token: "../../immagini/nemici/goblin_boss.png"
+        token: "immagini/nemici/goblin_boss.png"
     },
 
     {
@@ -67,24 +67,39 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 1,
         y: 14,
         type: "pvp",
-        token: "../../immagini/eventi/token_pvp.png"
+        token: "immagini/eventi/token_pvp.png"
     }
 
 ];
 
 // ============================================================
-// STATO GLOBALE GOBLIN BOSS
+// STATO COOLDOWN COMBAT PIANO 1 + GOBLIN BOSS
 // ============================================================
 //
-// Il backend decide se il Boss è disponibile.
-// Durante il cooldown:
+// C1-C5 condividono uno stato globale lato server, con
+// cooldown indipendente per ogni encounter.
 //
-// - il token del Boss viene nascosto;
-// - il Boss non viene rilevato come evento vicino;
-// - la sua casella NON blocca il movimento;
-// - allo scadere del cooldown il Boss ricompare.
+// Il Boss continua a usare il suo sistema separato.
+// Durante un cooldown:
+//
+// - il token viene nascosto;
+// - l'evento non viene rilevato come vicino;
+// - la sua casella non blocca il movimento;
+// - allo scadere del timer il token ricompare.
 //
 // ============================================================
+
+const FLOOR1_COOLDOWN_ENCOUNTERS =
+    new Set([
+        "combat_1",
+        "combat_2",
+        "combat_3",
+        "combat_4",
+        "combat_5"
+    ]);
+
+let floor1CombatStates = {};
+let floor1CombatStateRefreshInterval = null;
 
 let goblinBossAvailable =
     true;
@@ -111,6 +126,16 @@ function isDungeonCombatEventAvailable(
     }
 
 
+    if (
+        combatEvent.type ===
+        "pvp"
+    ) {
+
+        return true;
+
+    }
+
+
     const isBossEvent =
         combatEvent.id ===
             "BOSS1"
@@ -119,15 +144,162 @@ function isDungeonCombatEventAvailable(
             "combat_boss";
 
 
-    if (!isBossEvent) {
+    if (isBossEvent) {
 
-        return true;
+        return goblinBossAvailable ===
+            true;
 
     }
 
 
-    return goblinBossAvailable ===
-        true;
+    if (
+        FLOOR1_COOLDOWN_ENCOUNTERS.has(
+            combatEvent.encounter_id
+        )
+    ) {
+
+        return floor1CombatStates?.[
+            combatEvent.encounter_id
+        ]?.available !== false;
+
+    }
+
+
+    return true;
+
+}
+
+
+// ============================================================
+// AGGIORNA STATO C1-C5 DAL SERVER
+// ============================================================
+
+async function refreshFloor1CombatStates() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await db.rpc(
+                "get_floor1_combat_states"
+            );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        floor1CombatStates =
+            data || {};
+
+
+        renderCombatEvents();
+
+
+        // Se un combat entra in cooldown mentre il popup
+        // relativo è ancora aperto, lo chiudiamo subito.
+
+        if (
+            pendingCombatEvent
+            &&
+            FLOOR1_COOLDOWN_ENCOUNTERS.has(
+                pendingCombatEvent.encounter_id
+            )
+            &&
+            !isDungeonCombatEventAvailable(
+                pendingCombatEvent
+            )
+        ) {
+
+            closeCombatPrompt();
+
+        }
+
+
+        // Se l'evento vicino non è più disponibile,
+        // consentiamo alla rilevazione di ripartire pulita.
+
+        if (
+            nearbyCombatEventId
+        ) {
+
+            const nearbyEvent =
+                DUNGEON_COMBAT_EVENTS.find(
+                    combatEvent =>
+                        combatEvent.id ===
+                        nearbyCombatEventId
+                );
+
+
+            if (
+                nearbyEvent
+                &&
+                FLOOR1_COOLDOWN_ENCOUNTERS.has(
+                    nearbyEvent.encounter_id
+                )
+                &&
+                !isDungeonCombatEventAvailable(
+                    nearbyEvent
+                )
+            ) {
+
+                nearbyCombatEventId =
+                    null;
+
+            }
+
+        }
+
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "Errore stato combat Piano 1:",
+            error
+        );
+
+
+        // Manteniamo l'ultimo stato valido noto.
+        return null;
+
+    }
+
+}
+
+
+// ============================================================
+// REFRESH PERIODICO C1-C5
+// ============================================================
+
+function startFloor1CombatStateRefresh() {
+
+    if (
+        floor1CombatStateRefreshInterval
+    ) {
+
+        clearInterval(
+            floor1CombatStateRefreshInterval
+        );
+
+    }
+
+
+    floor1CombatStateRefreshInterval =
+        setInterval(
+            async () => {
+
+                await refreshFloor1CombatStates();
+
+            },
+            10000
+        );
 
 }
 
@@ -169,9 +341,6 @@ async function refreshGoblinBossState() {
         renderCombatEvents();
 
 
-        // Se il Boss è diventato indisponibile mentre
-        // avevamo il suo popup aperto, lo chiudiamo.
-
         if (
             goblinBossAvailable !==
                 true
@@ -191,9 +360,6 @@ async function refreshGoblinBossState() {
 
         }
 
-
-        // Se il Boss non è più disponibile,
-        // azzeriamo anche la rilevazione di vicinanza.
 
         if (
             goblinBossAvailable !==
@@ -218,9 +384,6 @@ async function refreshGoblinBossState() {
             error
         );
 
-
-        // In caso di errore manteniamo l'ultimo stato noto.
-        // Non alteriamo gli altri eventi del dungeon.
 
         return null;
 
@@ -268,18 +431,20 @@ const DUNGEON_COMMUNICATION_EVENTS = [
         id: "stairs_down",
         x: 11,
         y: 17,
-        type: "base_return",
+        type: "stairs",
+        score_bonus: 50,
         message:
-            "Queste scale conducono al Livello Base del Palazzo."
+            "Queste scale scendono verso il prossimo livello del Palazzo."
     },
 
     {
         id: "stairs_down_secret",
         x: 19,
         y: 22,
-        type: "base_return_secret",
+        type: "stairs",
+        score_bonus: 100,
         message:
-            "Queste scale conducono al Livello Base del Palazzo."
+            "Queste scale scendono verso il prossimo livello del Palazzo."
     },
 
     {
@@ -363,34 +528,6 @@ function checkCommunicationEvent() {
 
     if (
         dungeonEvent.type ===
-        "base_return"
-    ) {
-
-        openBaseReturnStairsPrompt(
-            dungeonEvent
-        );
-
-        return true;
-
-    }
-
-
-    if (
-        dungeonEvent.type ===
-        "base_return_secret"
-    ) {
-
-        openSecretBaseReturnStairsPrompt(
-            dungeonEvent
-        );
-
-        return true;
-
-    }
-
-
-    if (
-        dungeonEvent.type ===
         "stairs"
     ) {
 
@@ -418,638 +555,6 @@ function checkCommunicationEvent() {
 
 
     return false;
-
-}
-
-
-// ============================================================
-// SCALE X11 Y17 -> LIVELLO BASE
-// ============================================================
-//
-// Queste scale NON assegnano punti e NON archiviano/eliminano
-// il personaggio.
-//
-// Il PG viene trasferito nel Livello Base alla casella X11 Y3.
-// ============================================================
-
-function openBaseReturnStairsPrompt(
-    dungeonEvent
-) {
-
-    if (
-        !dungeonEvent ||
-        document.getElementById(
-            "base-return-stairs-overlay"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    eventLocked =
-        true;
-
-    movementQueue.length =
-        0;
-
-
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-
-    overlay.id =
-        "base-return-stairs-overlay";
-
-    overlay.className =
-        "combat-event-overlay";
-
-
-    const modal =
-        document.createElement(
-            "div"
-        );
-
-
-    modal.className =
-        "combat-event-modal";
-
-
-    modal.innerHTML = `
-        <div class="combat-event-icon">
-            ▲
-        </div>
-
-        <h2>
-            SCALE
-        </h2>
-
-        <p>
-            ${escapeCommunicationHtml(
-                dungeonEvent.message
-            )}
-        </p>
-
-        <div class="combat-event-warning">
-            Salendo tornerai al
-            <strong>Livello Base</strong>.
-        </div>
-
-        <div class="combat-event-buttons">
-
-            <button
-                id="base-return-stay-button"
-                type="button"
-                class="combat-event-button combat-event-cancel"
-            >
-                RIMANI
-            </button>
-
-            <button
-                id="base-return-enter-button"
-                type="button"
-                class="combat-event-button combat-event-enter"
-            >
-                RAGGIUNGI IL LIVELLO BASE
-            </button>
-
-        </div>
-    `;
-
-
-    overlay.appendChild(
-        modal
-    );
-
-
-    document.body.appendChild(
-        overlay
-    );
-
-
-    document
-        .getElementById(
-            "base-return-stay-button"
-        )
-        ?.addEventListener(
-            "click",
-            () => {
-
-                overlay.remove();
-
-                eventLocked =
-                    false;
-
-                setMessage(
-                    "Decidi di rimanere nel dungeon."
-                );
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "base-return-enter-button"
-        )
-        ?.addEventListener(
-            "click",
-            async () => {
-
-                await returnToBaseFromDungeon();
-
-            }
-        );
-
-}
-
-
-// ============================================================
-// TRASFERISCE IL PG AL LIVELLO BASE
-// ============================================================
-
-async function returnToBaseFromDungeon() {
-
-    if (
-        !character ||
-        !character.id
-    ) {
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "base-return-enter-button"
-        );
-
-
-    if (button) {
-
-        button.disabled =
-            true;
-
-        button.textContent =
-            "SALITA...";
-
-    }
-
-
-    eventLocked =
-        true;
-
-    movementQueue.length =
-        0;
-
-
-    try {
-
-        // ----------------------------------------------------
-        // Salva immediatamente l'ultima posizione dungeon.
-        // Non assegna alcun punto.
-        // ----------------------------------------------------
-
-        if (
-            typeof flushPositionSave ===
-            "function"
-        ) {
-
-            await flushPositionSave();
-
-        }
-
-
-        // ----------------------------------------------------
-        // Posizione di arrivo nel Livello Base: X11 Y3
-        // ----------------------------------------------------
-
-        const {
-            error
-        } =
-            await db
-                .from(
-                    "characters"
-                )
-                .update({
-
-                    base_x:
-                        11,
-
-                    base_y:
-                        3,
-
-                    current_location:
-                        "base"
-
-                })
-                .eq(
-                    "id",
-                    character.id
-                );
-
-
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        character.base_x =
-            11;
-
-        character.base_y =
-            3;
-
-        character.current_location =
-            "base";
-
-
-        // ----------------------------------------------------
-        // Rimuove il PG dalla Presence del Piano 1
-        // ----------------------------------------------------
-
-        if (
-            dungeonChannel &&
-            realtimeReady
-        ) {
-
-            try {
-
-                await dungeonChannel.untrack();
-
-            } catch (presenceError) {
-
-                console.error(
-                    "Errore untrack durante ritorno alla Base:",
-                    presenceError
-                );
-
-            }
-
-        }
-
-
-        // ----------------------------------------------------
-        // APRE IL LIVELLO BASE
-        // ----------------------------------------------------
-
-        try {
-            sessionStorage.setItem(
-                "palazzo_eterno_skip_base_arrival_event",
-                "1"
-            );
-        } catch (storageError) {
-            console.warn(
-                "Impossibile impostare flag arrivo Base:",
-                storageError
-            );
-        }
-
-        window.location.href =
-            "../../base/base.html";
-
-
-    } catch (error) {
-
-        console.error(
-            "Errore ritorno al Livello Base:",
-            error
-        );
-
-
-        setMessage(
-            error?.message ||
-            "Non è stato possibile tornare al Livello Base."
-        );
-
-
-        if (button) {
-
-            button.disabled =
-                false;
-
-            button.textContent =
-                "RAGGIUNGI IL LIVELLO BASE";
-
-        }
-
-
-        eventLocked =
-            false;
-
-    }
-
-}
-
-
-// ============================================================
-// SCALE X19 Y22 -> LIVELLO BASE X18 Y8
-// ============================================================
-//
-// Nessun punto, nessuna archiviazione, nessuna morte.
-// ============================================================
-
-function openSecretBaseReturnStairsPrompt(
-    dungeonEvent
-) {
-
-    if (
-        !dungeonEvent ||
-        document.getElementById(
-            "secret-base-return-stairs-overlay"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    eventLocked =
-        true;
-
-    movementQueue.length =
-        0;
-
-
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-
-    overlay.id =
-        "secret-base-return-stairs-overlay";
-
-    overlay.className =
-        "combat-event-overlay";
-
-
-    const modal =
-        document.createElement(
-            "div"
-        );
-
-
-    modal.className =
-        "combat-event-modal";
-
-
-    modal.innerHTML = `
-        <div class="combat-event-icon">
-            ▲
-        </div>
-
-        <h2>
-            SCALE
-        </h2>
-
-        <p>
-            ${escapeCommunicationHtml(
-                dungeonEvent.message
-            )}
-        </p>
-
-        <div class="combat-event-warning">
-            Salendo raggiungerai il
-            <strong>Livello Base</strong>.
-        </div>
-
-        <div class="combat-event-buttons">
-
-            <button
-                id="secret-base-return-stay-button"
-                type="button"
-                class="combat-event-button combat-event-cancel"
-            >
-                RIMANI
-            </button>
-
-            <button
-                id="secret-base-return-enter-button"
-                type="button"
-                class="combat-event-button combat-event-enter"
-            >
-                RAGGIUNGI IL LIVELLO BASE
-            </button>
-
-        </div>
-    `;
-
-
-    overlay.appendChild(
-        modal
-    );
-
-
-    document.body.appendChild(
-        overlay
-    );
-
-
-    document
-        .getElementById(
-            "secret-base-return-stay-button"
-        )
-        ?.addEventListener(
-            "click",
-            () => {
-
-                overlay.remove();
-
-                eventLocked =
-                    false;
-
-                setMessage(
-                    "Decidi di rimanere nel dungeon."
-                );
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            "secret-base-return-enter-button"
-        )
-        ?.addEventListener(
-            "click",
-            async () => {
-
-                await returnToSecretBaseStairs();
-
-            }
-        );
-
-}
-
-
-// ============================================================
-// TRASFERISCE IL PG ALLA BASE X18 Y8
-// ============================================================
-
-async function returnToSecretBaseStairs() {
-
-    if (
-        !character ||
-        !character.id
-    ) {
-
-        return;
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "secret-base-return-enter-button"
-        );
-
-
-    if (button) {
-
-        button.disabled =
-            true;
-
-        button.textContent =
-            "SALITA...";
-
-    }
-
-
-    eventLocked =
-        true;
-
-    movementQueue.length =
-        0;
-
-
-    try {
-
-        if (
-            typeof flushPositionSave ===
-            "function"
-        ) {
-
-            await flushPositionSave();
-
-        }
-
-
-        const {
-            error
-        } =
-            await db
-                .from(
-                    "characters"
-                )
-                .update({
-
-                    base_x:
-                        18,
-
-                    base_y:
-                        8,
-
-                    current_location:
-                        "base"
-
-                })
-                .eq(
-                    "id",
-                    character.id
-                );
-
-
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        character.base_x =
-            18;
-
-        character.base_y =
-            8;
-
-        character.current_location =
-            "base";
-
-
-        if (
-            dungeonChannel &&
-            realtimeReady
-        ) {
-
-            try {
-
-                await dungeonChannel.untrack();
-
-            } catch (presenceError) {
-
-                console.error(
-                    "Errore untrack durante ritorno alla Base:",
-                    presenceError
-                );
-
-            }
-
-        }
-
-
-        try {
-            sessionStorage.setItem(
-                "palazzo_eterno_skip_base_arrival_event",
-                "1"
-            );
-        } catch (storageError) {
-            console.warn(
-                "Impossibile impostare flag arrivo Base:",
-                storageError
-            );
-        }
-
-        window.location.href =
-            "../../base/base.html";
-
-
-    } catch (error) {
-
-        console.error(
-            "Errore ritorno al Livello Base dalle scale segrete:",
-            error
-        );
-
-
-        setMessage(
-            error?.message ||
-            "Non è stato possibile raggiungere il Livello Base."
-        );
-
-
-        if (button) {
-
-            button.disabled =
-                false;
-
-            button.textContent =
-                "RAGGIUNGI IL LIVELLO BASE";
-
-        }
-
-
-        eventLocked =
-            false;
-
-    }
 
 }
 
@@ -1422,7 +927,7 @@ async function descendToNextFloor(
         // ----------------------------------------------------
 
         window.location.href =
-            `../../morte.html?nome=${encodeURIComponent(
+            `morte.html?nome=${encodeURIComponent(
                 deadName
             )}&score=${encodeURIComponent(
                 deadFinalScore
@@ -1945,7 +1450,7 @@ function openCombatPrompt(
 
 
                     window.location.href =
-                        "../../pvp.html";
+                        "pvp.html";
 
 
                     return;
@@ -1970,14 +1475,28 @@ function openCombatPrompt(
                         "combat_boss";
 
 
+                const isFloor1CooldownEvent =
+                    FLOOR1_COOLDOWN_ENCOUNTERS.has(
+                        selectedEvent.encounter_id
+                    );
+
+
+                const enterCombatRpc =
+                    isBossEvent
+                        ? "enter_dungeon_combat_checked"
+                        : (
+                            isFloor1CooldownEvent
+                                ? "enter_floor1_combat_checked"
+                                : "enter_dungeon_combat"
+                        );
+
+
                 const {
                     data,
                     error
                 } =
                     await db.rpc(
-                        isBossEvent
-                            ? "enter_dungeon_combat_checked"
-                            : "enter_dungeon_combat",
+                        enterCombatRpc,
                         {
 
                             p_encounter_id:
@@ -2045,7 +1564,7 @@ function openCombatPrompt(
                 // al cambio pagina.
 
                 window.location.href =
-                    `../../combat.html?combat_id=${encodeURIComponent(
+                    `combat.html?combat_id=${encodeURIComponent(
                         combatId
                     )}`;
 
@@ -2087,6 +1606,14 @@ function openCombatPrompt(
                 ) {
 
                     await refreshGoblinBossState();
+
+                } else if (
+                    FLOOR1_COOLDOWN_ENCOUNTERS.has(
+                        selectedEvent?.encounter_id
+                    )
+                ) {
+
+                    await refreshFloor1CombatStates();
 
                 }
 
@@ -2148,18 +1675,22 @@ document.addEventListener(
         );
 
 
-        // Prima di mostrare i token leggiamo
-        // lo stato globale del Goblin Boss.
+        // Prima di mostrare i token leggiamo dal server
+        // sia i cooldown C1-C5 sia lo stato del Boss.
 
-        await refreshGoblinBossState();
+        await Promise.all([
+            refreshFloor1CombatStates(),
+            refreshGoblinBossState()
+        ]);
 
 
         renderCombatEvents();
 
 
         // Durante la permanenza nel dungeon controlliamo
-        // periodicamente se il cooldown è terminato.
+        // periodicamente se i cooldown sono terminati.
 
+        startFloor1CombatStateRefresh();
         startGoblinBossStateRefresh();
 
     }
@@ -2618,12 +2149,26 @@ function repositionCombatEvents() {
 }
 
 // ============================================================
-// CHIUSURA PAGINA - STOP REFRESH BOSS
+// CHIUSURA PAGINA - STOP REFRESH COOLDOWN
 // ============================================================
 
 window.addEventListener(
     "beforeunload",
     () => {
+
+        if (
+            floor1CombatStateRefreshInterval
+        ) {
+
+            clearInterval(
+                floor1CombatStateRefreshInterval
+            );
+
+            floor1CombatStateRefreshInterval =
+                null;
+
+        }
+
 
         if (
             goblinBossCooldownRefreshInterval
