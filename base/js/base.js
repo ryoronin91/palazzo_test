@@ -70,6 +70,23 @@ let baseLocandaEntering =
 
 
 // ============================================================
+// RIPOSO NELL'AREA DELLA LOCANDA
+// ============================================================
+
+let baseInnResting =
+    false;
+
+let baseInnState =
+    null;
+
+let baseInnTimer =
+    null;
+
+let baseInnTickBusy =
+    false;
+
+
+// ============================================================
 // DATABASE / REALTIME LIVELLO BASE
 // ============================================================
 
@@ -145,6 +162,10 @@ if (
 ) {
     await initializeBaseServices();
 }
+
+// Se il personaggio ricarica la Base mentre si trova già
+// nell'area della Locanda, ripristina subito lo stato di riposo.
+await updateBaseInnRestState();
 
 
 setupBaseCamera();
@@ -1063,19 +1084,6 @@ function positionBaseStaticDecorations() {
                 String(
                     decoration.zIndex ?? 6
                 );
-
-                if (
-    decoration.id ===
-    "locanda"
-) {
-    const scale = 1.12;
-
-    element.style.transform =
-        `scale(${scale})`;
-
-    element.style.transformOrigin =
-        "center center";
-}
         }
     );
 }
@@ -1515,6 +1523,337 @@ async function enterBaseLocanda() {
             "Non riesco ad entrare nella Locanda. Riprova.",
             true
         );
+    }
+}
+
+
+
+// ============================================================
+// RIPOSO NELL'AREA DELLA LOCANDA
+// ============================================================
+//
+// La Locanda attiva cura il personaggio anche restando
+// semplicemente sopra l'area dell'edificio:
+//
+// X 3..6
+// Y 14..19
+//
+// Il timer continua anche entrando nella pagina di Fegato d'Oca,
+// perché enter_inn() è idempotente e non resetta un riposo già
+// attivo.
+// ============================================================
+
+function isPlayerInsideLocandaArea() {
+
+    return (
+        Number(basePlayerX) >= 3 &&
+        Number(basePlayerX) <= 6 &&
+        Number(basePlayerY) >= 14 &&
+        Number(basePlayerY) <= 19
+    );
+}
+
+
+async function refreshBaseInnState() {
+
+    const {
+        data,
+        error
+    } =
+        await db.rpc(
+            "get_inn_state"
+        );
+
+    if (error) {
+        throw error;
+    }
+
+    baseInnState =
+        data || null;
+
+    return baseInnState;
+}
+
+
+function getBaseInnSecondsRemaining() {
+
+    const target =
+        Date.parse(
+            baseInnState
+                ?.next_regeneration_at
+        );
+
+    if (
+        Number.isFinite(
+            target
+        )
+    ) {
+
+        return Math.max(
+            0,
+            Math.ceil(
+                (
+                    target -
+                    Date.now()
+                )
+                /
+                1000
+            )
+        );
+    }
+
+    return Math.max(
+        0,
+        Number(
+            baseInnState
+                ?.seconds_until_next_tick
+        ) || 0
+    );
+}
+
+
+async function updateBaseInnRestState() {
+
+    if (
+        !character
+    ) {
+        return;
+    }
+
+    const shouldRest =
+        isBaseLocandaActive()
+        &&
+        isPlayerInsideLocandaArea();
+
+    if (
+        shouldRest
+    ) {
+
+        if (
+            !baseInnResting
+        ) {
+
+            try {
+
+                const {
+                    error
+                } =
+                    await db.rpc(
+                        "enter_inn"
+                    );
+
+                if (error) {
+                    throw error;
+                }
+
+                baseInnResting =
+                    true;
+
+                await refreshBaseInnState();
+
+                startBaseInnTimer();
+
+                setMessage(
+                    "Ti riposi nella Locanda. Recuperi 1 PF e 1 PM al minuto."
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    "Errore ingresso area Locanda:",
+                    error
+                );
+            }
+        }
+
+        return;
+    }
+
+
+    if (
+        baseInnResting
+    ) {
+
+        baseInnResting =
+            false;
+
+        stopBaseInnTimer();
+
+        baseInnState =
+            null;
+
+        try {
+
+            const {
+                error
+            } =
+                await db.rpc(
+                    "leave_inn"
+                );
+
+            if (error) {
+                throw error;
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Errore uscita area Locanda:",
+                error
+            );
+        }
+    }
+}
+
+
+function startBaseInnTimer() {
+
+    stopBaseInnTimer();
+
+    baseInnTimer =
+        window.setInterval(
+            async () => {
+
+                if (
+                    !baseInnResting ||
+                    baseInnTickBusy
+                ) {
+                    return;
+                }
+
+                if (
+                    !isBaseLocandaActive() ||
+                    !isPlayerInsideLocandaArea()
+                ) {
+
+                    await updateBaseInnRestState();
+
+                    return;
+                }
+
+                if (
+                    getBaseInnSecondsRemaining() >
+                    0
+                ) {
+                    return;
+                }
+
+                await runBaseInnRegenerationTick();
+
+            },
+            1000
+        );
+}
+
+
+function stopBaseInnTimer() {
+
+    if (
+        baseInnTimer
+    ) {
+
+        clearInterval(
+            baseInnTimer
+        );
+
+        baseInnTimer =
+            null;
+    }
+}
+
+
+async function runBaseInnRegenerationTick() {
+
+    if (
+        baseInnTickBusy
+    ) {
+        return;
+    }
+
+    baseInnTickBusy =
+        true;
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await db.rpc(
+                "inn_regeneration_tick"
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        baseInnState =
+            data || baseInnState;
+
+        if (
+            character
+        ) {
+
+            character.current_hp =
+                data?.current_pf;
+
+            character.current_pm =
+                data?.current_pm;
+
+            updateCharacterPanel();
+
+            updateBasePresence();
+        }
+
+        const healedPf =
+            Math.max(
+                0,
+                Number(
+                    data?.healed_pf
+                ) || 0
+            );
+
+        const healedPm =
+            Math.max(
+                0,
+                Number(
+                    data?.healed_pm
+                ) || 0
+            );
+
+        if (
+            healedPf > 0 ||
+            healedPm > 0
+        ) {
+
+            setMessage(
+                `Riposo in Locanda: +${healedPf} PF · +${healedPm} PM`
+            );
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Errore rigenerazione area Locanda:",
+            error
+        );
+
+        /*
+         * Se il server rifiuta il tick perché il personaggio
+         * non è più realmente nell'area, chiudiamo lo stato locale.
+         */
+        baseInnResting =
+            false;
+
+        stopBaseInnTimer();
+
+        baseInnState =
+            null;
+
+    } finally {
+
+        baseInnTickBusy =
+            false;
     }
 }
 
@@ -2354,6 +2693,10 @@ if (
         basePlayerY
     );
 }
+
+
+// Aggiorna il riposo della Locanda dopo ogni movimento.
+updateBaseInnRestState();
 
 
 setMessage(
@@ -4087,12 +4430,14 @@ window.addEventListener(
 
         }
 
+        stopBaseInnTimer();
+
         if (
-    typeof destroyBaseServices ===
-    "function"
-) {
-    destroyBaseServices();
-}
+            typeof destroyBaseServices ===
+            "function"
+        ) {
+            destroyBaseServices();
+        }
 
     }
 );

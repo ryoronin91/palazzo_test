@@ -2104,7 +2104,12 @@ function setupExitButton() {
 
             try {
 
-                await leaveInnSafely();
+                /*
+                 * NON chiamiamo leave_inn():
+                 * tornando alla Base il PG resta fisicamente
+                 * nell'area della Locanda, quindi il riposo deve
+                 * continuare senza azzerare il minuto corrente.
+                 */
 
                 await setCharacterLocation(
                     "base"
