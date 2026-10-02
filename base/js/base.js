@@ -56,6 +56,20 @@ let baseRunografoEntering =
 
 
 // ============================================================
+// LOCANDA - FEGATO D'OCA
+// ============================================================
+
+const BASE_LOCANDA_X = 4;
+const BASE_LOCANDA_Y = 15;
+
+const BASE_LOCANDA_PAGE =
+    "services/locanda/locanda.html";
+
+let baseLocandaEntering =
+    false;
+
+
+// ============================================================
 // DATABASE / REALTIME LIVELLO BASE
 // ============================================================
 
@@ -1346,6 +1360,152 @@ async function enterBaseRunografo() {
 }
 
 
+
+// ============================================================
+// LOCANDA - FEGATO D'OCA
+// ============================================================
+
+function isBaseLocandaCell(
+    x,
+    y
+) {
+
+    return (
+        Number(x) ===
+            BASE_LOCANDA_X
+        &&
+        Number(y) ===
+            BASE_LOCANDA_Y
+    );
+}
+
+
+function isBaseLocandaActive() {
+
+    if (
+        typeof isBaseServiceActive !==
+        "function"
+    ) {
+
+        return false;
+    }
+
+    return (
+        isBaseServiceActive(
+            "locanda"
+        ) ===
+        true
+    );
+}
+
+
+async function enterBaseLocanda() {
+
+    if (
+        baseLocandaEntering ||
+        !character
+    ) {
+
+        return;
+    }
+
+    if (
+        !isBaseLocandaActive()
+    ) {
+
+        return;
+    }
+
+    baseLocandaEntering =
+        true;
+
+    setMessage(
+        "Entri nella Locanda di Fegato d'Oca..."
+    );
+
+    try {
+
+        if (
+            basePositionSaveTimer
+        ) {
+
+            clearTimeout(
+                basePositionSaveTimer
+            );
+
+            basePositionSaveTimer =
+                null;
+        }
+
+        basePositionSavePending =
+            false;
+
+        await flushBasePositionSave();
+
+        const {
+            error
+        } =
+            await db
+                .from(
+                    "characters"
+                )
+                .update({
+                    base_x:
+                        Number(
+                            basePlayerX
+                        ),
+
+                    base_y:
+                        Number(
+                            basePlayerY
+                        )
+                })
+                .eq(
+                    "id",
+                    character.id
+                );
+
+        if (error) {
+            throw error;
+        }
+
+        character.base_x =
+            Number(
+                basePlayerX
+            );
+
+        character.base_y =
+            Number(
+                basePlayerY
+            );
+
+        /*
+         * La Locanda è un servizio interno al Livello Base.
+         * current_location resta "base", esattamente come
+         * per il Runografo.
+         */
+
+        window.location.href =
+            BASE_LOCANDA_PAGE;
+
+    } catch (error) {
+
+        console.error(
+            "Errore ingresso Locanda dalla Base:",
+            error
+        );
+
+        baseLocandaEntering =
+            false;
+
+        setMessage(
+            "Non riesco ad entrare nella Locanda. Riprova.",
+            true
+        );
+    }
+}
+
+
 // ============================================================
 // BACHECA - INTERAZIONE
 // ============================================================
@@ -2032,6 +2192,33 @@ function moveBasePlayer(dx, dy) {
     ) {
 
         enterBaseRunografo();
+
+        return false;
+    }
+
+    // ========================================================
+    // LOCANDA - FEGATO D'OCA
+    // ========================================================
+    //
+    // Durante UNBUILT / BUILDING la casella resta libera:
+    // il sistema generico dei servizi gestisce il popup di
+    // costruzione entrando nell'area configurata in services.json.
+    //
+    // Solo quando LOCANDA è ACTIVE compare Fegato d'Oca.
+    // Tentare di entrare nella sua casella apre il servizio,
+    // senza permettere al PG di sovrapporsi al token.
+    // ========================================================
+
+    if (
+        isBaseLocandaCell(
+            newX,
+            newY
+        )
+        &&
+        isBaseLocandaActive()
+    ) {
+
+        enterBaseLocanda();
 
         return false;
     }
