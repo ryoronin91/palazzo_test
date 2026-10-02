@@ -6,7 +6,7 @@
 
     <title>Palazzo Eterno - Runografo</title>
 
-    <link rel="stylesheet" href="runografo.css?v=1">
+    <link rel="stylesheet" href="runografo.css?v=2">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../../js/config.js?v=11"></script>
@@ -17,42 +17,104 @@
     <main class="vendor-page runografo-page">
 
         <!-- ==================================================
-             INVENTARIO PG
+             SERVIZIO RUNOGRAFO
         =================================================== -->
 
         <section
-            class="merchant-panel player-inventory"
-            aria-label="Inventario personaggio"
+            class="merchant-panel player-inventory runografo-service-panel"
+            aria-label="Servizio Runografo"
         >
 
             <div class="player-inventory-header">
 
-                <div
-                    id="player-inventory-title"
-                    class="player-inventory-title"
-                >
-                    INVENTARIO PG
+                <div class="player-inventory-title">
+                    SERVIZIO RUNOGRAFO
                 </div>
 
                 <div class="player-gold-line">
                     <span>MONETE D'ORO</span>
-
-                    <strong id="player-gold-amount">
-                        0
-                    </strong>
+                    <strong id="player-gold-amount">0</strong>
                 </div>
 
             </div>
 
             <div class="player-inventory-divider"></div>
 
-            <div
-                id="player-inventory-list"
-                class="inventory-scroll"
-            >
-                <div class="player-inventory-status">
-                    Caricamento inventario...
-                </div>
+            <div class="runografo-left-scroll">
+
+                <section
+                    class="runografo-service-box"
+                    aria-label="Riserva del Runografo"
+                >
+                    <div class="runografo-service-title">
+                        RISERVA DEL SERVIZIO
+                    </div>
+
+                    <div class="runografo-service-grid">
+                        <div>
+                            <span>Autonomia</span>
+                            <strong id="runografo-service-time">--:--:--</strong>
+                        </div>
+
+                        <div>
+                            <span>Riserva equivalente</span>
+                            <strong><span id="runografo-service-gold">--</span> oro</strong>
+                        </div>
+                    </div>
+
+                    <form id="runografo-maintenance-form" class="runografo-maintenance-form">
+                        <input
+                            id="runografo-maintenance-quantity"
+                            type="number"
+                            min="1"
+                            step="1"
+                            value="1"
+                            inputmode="numeric"
+                            aria-label="Monete da aggiungere alla riserva"
+                        >
+
+                        <button
+                            id="runografo-maintenance-button"
+                            type="submit"
+                            class="merchant-button"
+                        >
+                            ALIMENTA RISERVA
+                        </button>
+                    </form>
+
+                    <div
+                        id="runografo-maintenance-feedback"
+                        class="runografo-maintenance-feedback"
+                        aria-live="polite"
+                    ></div>
+                </section>
+
+                <section
+                    class="runografo-upgrade-box"
+                    aria-label="Potenziamento Runografo"
+                >
+                    <div class="runografo-upgrade-heading">
+                        <div>
+                            <div class="runografo-service-title">POTENZIAMENTO</div>
+                            <strong id="runografo-upgrade-level">LV 1 → LV 2</strong>
+                        </div>
+
+                        <span id="runografo-upgrade-status" class="runografo-upgrade-status">
+                            IN CORSO
+                        </span>
+                    </div>
+
+                    <div id="runografo-upgrade-requirements" class="runografo-upgrade-requirements">
+                        <div class="inventory-empty">Caricamento requisiti...</div>
+                    </div>
+
+                    <div
+                        id="runografo-upgrade-feedback"
+                        class="runografo-maintenance-feedback"
+                        aria-live="polite"
+                    ></div>
+                </section>
+
             </div>
 
         </section>
@@ -199,72 +261,6 @@
             <div class="ornate-divider"></div>
 
 
-            <section
-                class="runografo-service-box"
-                aria-label="Riserva del Runografo"
-            >
-
-                <div class="runografo-service-title">
-                    RISERVA DEL SERVIZIO
-                </div>
-
-                <div class="runografo-service-grid">
-
-                    <div>
-                        <span>Autonomia</span>
-
-                        <strong id="runografo-service-time">
-                            --:--:--
-                        </strong>
-                    </div>
-
-                    <div>
-                        <span>Riserva equivalente</span>
-
-                        <strong>
-                            <span id="runografo-service-gold">
-                                --
-                            </span>
-                            oro
-                        </strong>
-                    </div>
-
-                </div>
-
-                <form
-                    id="runografo-maintenance-form"
-                    class="runografo-maintenance-form"
-                >
-
-                    <input
-                        id="runografo-maintenance-quantity"
-                        type="number"
-                        min="1"
-                        step="1"
-                        value="1"
-                        inputmode="numeric"
-                        aria-label="Monete da aggiungere alla riserva"
-                    >
-
-                    <button
-                        id="runografo-maintenance-button"
-                        type="submit"
-                        class="merchant-button"
-                    >
-                        ALIMENTA RISERVA
-                    </button>
-
-                </form>
-
-                <div
-                    id="runografo-maintenance-feedback"
-                    class="runografo-maintenance-feedback"
-                    aria-live="polite"
-                ></div>
-
-            </section>
-
-
             <div class="runografo-stock-divider"></div>
 
 
@@ -282,7 +278,7 @@
     </main>
 
 
-    <script src="runografo.js?v=4"></script>
+    <script src="runografo.js?v=5"></script>
 
 </body>
 </html>

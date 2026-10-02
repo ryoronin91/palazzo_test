@@ -54,6 +54,9 @@ let runografoItems =
 let servicePayload =
     null;
 
+let upgradePayload =
+    null;
+
 let serviceTimer =
     null;
 
@@ -118,17 +121,21 @@ document.addEventListener(
 
             await loadCharacterInventory();
 
+            await refreshUpgradeState();
+
             await loadRunografoItems();
 
             updateInventoryHeader();
-
-            renderCharacterInventory();
 
             renderRunografoItems();
 
             renderServiceState();
 
+            renderUpgradeState();
+
             setupMaintenanceForm();
+
+            setupUpgradeContributions();
 
             setupAiChat();
 
@@ -356,156 +363,40 @@ function getGoldEntry() {
 
 function updateInventoryHeader() {
 
-    const title =
-        document.getElementById(
-            "player-inventory-title"
-        );
-
     const gold =
         document.getElementById(
             "player-gold-amount"
         );
 
-    if (title) {
-
-        const name =
-            String(
-                character?.nome ||
-                "PG"
-            )
-                .trim()
-                .toUpperCase();
-
-        title.textContent =
-            `INVENTARIO ${name}`;
-    }
-
     if (gold) {
-
         gold.textContent =
             String(
-                Number(
-                    getGoldEntry()
-                        ?.quantity
-                ) || 0
+                getInventoryQuantity(
+                    "moneta_oro"
+                )
             );
     }
 }
 
 
-function renderCharacterInventory() {
+function getInventoryQuantity(
+    itemId
+) {
 
-    const container =
-        document.getElementById(
-            "player-inventory-list"
+    return characterInventory
+        .filter(
+            entry =>
+                entry?.item?.id ===
+                    itemId
+                &&
+                !entry.equipped_slot
+        )
+        .reduce(
+            (total, entry) =>
+                total +
+                (Number(entry.quantity) || 0),
+            0
         );
-
-    if (!container) {
-        return;
-    }
-
-    const entries =
-        characterInventory
-            .filter(
-                entry => {
-
-                    if (
-                        !entry?.item
-                        ||
-                        Number(
-                            entry.quantity
-                        ) <= 0
-                    ) {
-                        return false;
-                    }
-
-                    const item =
-                        entry.item;
-
-                    const type =
-                        String(
-                            item.item_type ||
-                            ""
-                        )
-                            .toLowerCase();
-
-                    return !(
-                        type ===
-                            "currency"
-                        ||
-                        item.id ===
-                            "moneta_oro"
-                    );
-                }
-            )
-            .sort(
-                (a, b) =>
-                    String(
-                        a.item?.name ||
-                        ""
-                    ).localeCompare(
-                        String(
-                            b.item?.name ||
-                            ""
-                        ),
-                        "it"
-                    )
-            );
-
-    if (!entries.length) {
-
-        container.innerHTML = `
-            <div class="inventory-empty">
-                Inventario vuoto.
-            </div>
-        `;
-
-        return;
-    }
-
-    container.innerHTML =
-        entries
-            .map(
-                entry => {
-
-                    const equipped =
-                        entry.equipped_slot
-                            ? `
-                                <div class="player-item-equipped">
-                                    EQUIPAGGIATO
-                                </div>
-                            `
-                            : "";
-
-                    return `
-                        <article
-                            class="player-item"
-                        >
-
-                            <div class="player-item-quantity">
-                                ×${Number(
-                                    entry.quantity
-                                ) || 0}
-                            </div>
-
-                            <div class="player-item-center">
-
-                                <div class="player-item-name">
-                                    ${escapeHtml(
-                                        entry.item.name ||
-                                        entry.item.id
-                                    )}
-                                </div>
-
-                                ${equipped}
-
-                            </div>
-
-                        </article>
-                    `;
-                }
-            )
-            .join("");
 }
 
 
@@ -896,6 +787,205 @@ async function ensureServiceActive() {
             "Il Runografo non è più attivo."
         );
     }
+}
+
+
+// ============================================================
+// STATO UPGRADE
+// ============================================================
+
+async function refreshUpgradeState() {
+    const { data, error } =
+        await db.rpc(
+            "get_base_service_upgrade_state",
+            { p_service_key: SERVICE_KEY }
+        );
+
+    if (error) {
+        throw error;
+    }
+
+    upgradePayload = data || null;
+    return upgradePayload;
+}
+
+
+function renderUpgradeState() {
+    const levelElement = document.getElementById("runografo-upgrade-level");
+    const statusElement = document.getElementById("runografo-upgrade-status");
+    const container = document.getElementById("runografo-upgrade-requirements");
+
+    if (!container) return;
+
+    const currentLevel = Math.max(1, Number(upgradePayload?.current_level) || 1);
+    const maxLevel = Math.max(1, Number(upgradePayload?.max_level) || 6);
+    const targetLevel = Number(upgradePayload?.target_level);
+    const enabled = upgradePayload?.enabled === true;
+    const requirements = Array.isArray(upgradePayload?.requirements)
+        ? upgradePayload.requirements
+        : [];
+
+    if (levelElement) {
+        levelElement.textContent = currentLevel >= maxLevel
+            ? `LV ${currentLevel} · MASSIMO`
+            : `LV ${currentLevel} → LV ${targetLevel || currentLevel + 1}`;
+    }
+
+    if (statusElement) {
+        statusElement.classList.remove("is-complete");
+        if (currentLevel >= maxLevel) {
+            statusElement.textContent = "COMPLETO";
+            statusElement.classList.add("is-complete");
+        } else if (!enabled) {
+            statusElement.textContent = "NON DISPONIBILE";
+        } else {
+            statusElement.textContent = "IN CORSO";
+        }
+    }
+
+    if (currentLevel >= maxLevel) {
+        container.innerHTML = `<div class="inventory-empty">Il Runografo ha raggiunto il livello massimo.</div>`;
+        return;
+    }
+
+    if (!enabled || requirements.length === 0) {
+        container.innerHTML = `<div class="inventory-empty">I requisiti per il prossimo livello non sono ancora stati definiti.</div>`;
+        return;
+    }
+
+    container.innerHTML = requirements.map(requirement => {
+        const itemId = String(requirement.item_id || "");
+        const itemName = String(requirement.item_name || itemId);
+        const required = Math.max(0, Number(requirement.required_quantity) || 0);
+        const contributed = Math.max(0, Number(requirement.contributed_quantity) || 0);
+        const remaining = Math.max(0, required - contributed);
+        const owned = getInventoryQuantity(itemId);
+        const percentage = required > 0
+            ? Math.min(100, Math.round(contributed / required * 100))
+            : 0;
+        const complete = remaining <= 0;
+
+        return `
+            <article class="runografo-upgrade-requirement${complete ? " is-complete" : ""}">
+                <div class="runografo-upgrade-row">
+                    <strong>${escapeHtml(itemName)}</strong>
+                    <span>${contributed} / ${required}</span>
+                </div>
+
+                <div class="runografo-upgrade-progress">
+                    <span style="width:${percentage}%"></span>
+                </div>
+
+                <div class="runografo-upgrade-owned">
+                    Possiedi: <strong>${owned}</strong>
+                </div>
+
+                ${complete
+                    ? `<div class="runografo-upgrade-complete">REQUISITO COMPLETO</div>`
+                    : `
+                        <form class="runografo-upgrade-form" data-item-id="${escapeHtml(itemId)}">
+                            <input
+                                class="runografo-upgrade-quantity"
+                                type="number"
+                                min="1"
+                                max="${remaining}"
+                                step="1"
+                                value="1"
+                                inputmode="numeric"
+                                aria-label="Quantità di ${escapeHtml(itemName)} da contribuire"
+                            >
+                            <button
+                                type="submit"
+                                class="merchant-button runografo-upgrade-button"
+                                ${owned <= 0 ? "disabled" : ""}
+                            >
+                                CONTRIBUISCI
+                            </button>
+                        </form>
+                    `}
+            </article>
+        `;
+    }).join("");
+}
+
+
+function setupUpgradeContributions() {
+    const container = document.getElementById("runografo-upgrade-requirements");
+    if (!container) return;
+
+    container.addEventListener("submit", async event => {
+        const form = event.target.closest(".runografo-upgrade-form");
+        if (!form) return;
+
+        event.preventDefault();
+        await contributeToUpgrade(form);
+    });
+}
+
+
+async function contributeToUpgrade(form) {
+    const itemId = String(form?.dataset?.itemId || "");
+    const input = form?.querySelector(".runografo-upgrade-quantity");
+    const button = form?.querySelector(".runografo-upgrade-button");
+    const quantity = Math.floor(Number(input?.value));
+
+    if (!itemId || !Number.isFinite(quantity) || quantity <= 0) {
+        setUpgradeFeedback("Inserisci una quantità valida.", true);
+        return;
+    }
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "...";
+    }
+
+    try {
+        await ensureServiceActive();
+
+        const { data, error } = await db.rpc(
+            "contribute_to_base_service_upgrade",
+            {
+                p_service_key: SERVICE_KEY,
+                p_item_id: itemId,
+                p_quantity: quantity
+            }
+        );
+
+        if (error) throw error;
+
+        await loadCharacterInventory();
+        await refreshUpgradeState();
+
+        updateInventoryHeader();
+        renderUpgradeState();
+
+        const contributed = Math.max(0, Number(data?.quantity_contributed) || quantity);
+
+        if (data?.upgraded === true) {
+            setUpgradeFeedback(`Upgrade completato: Runografo LV ${Number(data?.current_level) || "?"}.`);
+            showDialogue("Le rune si accendono. Il Runografo ha raggiunto un nuovo livello.");
+        } else {
+            setUpgradeFeedback(`${contributed} unità consegnate al potenziamento.`);
+        }
+
+    } catch (error) {
+        console.error("Errore contributo upgrade Runografo:", error);
+        setUpgradeFeedback(error?.message || "Non è stato possibile registrare il contributo.", true);
+    } finally {
+        if (button && button.isConnected) {
+            button.disabled = false;
+            button.textContent = "CONTRIBUISCI";
+        }
+    }
+}
+
+
+function setUpgradeFeedback(message, isError = false) {
+    const feedback = document.getElementById("runografo-upgrade-feedback");
+    if (!feedback) return;
+
+    feedback.textContent = message || "";
+    feedback.classList.toggle("is-error", Boolean(isError));
 }
 
 
@@ -1296,6 +1386,8 @@ async function addMaintenanceGold() {
         updateInventoryHeader();
 
         renderServiceState();
+
+        renderUpgradeState();
 
         setMaintenanceFeedback(
             `${quantity} monete aggiunte alla riserva.`

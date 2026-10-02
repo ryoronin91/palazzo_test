@@ -2236,3 +2236,91 @@ input {
     }
 
 }
+
+
+/* ============================================================
+   RUNOGRAFO V2 - PANNELLO SERVIZIO / UPGRADE
+============================================================ */
+
+.runografo-left-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 0 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dark) transparent;
+}
+
+.runografo-left-scroll::-webkit-scrollbar { width: 7px; }
+.runografo-left-scroll::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 99px; }
+
+.runografo-service-panel .runografo-service-box { margin-top: 0; }
+
+.runografo-upgrade-box {
+    margin: 0 18px 12px;
+    padding: 12px;
+    border: 1px solid rgba(198, 164, 92, 0.40);
+    background: linear-gradient(135deg, rgba(198, 164, 92, 0.075), rgba(5, 6, 8, 0.68));
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.28);
+}
+
+.runografo-upgrade-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.runografo-upgrade-heading .runografo-service-title { margin-bottom: 5px; color: var(--gold-bright); }
+.runografo-upgrade-heading strong { color: var(--ivory); font-size: 15px; font-weight: 400; letter-spacing: 0.055em; }
+
+.runografo-upgrade-status {
+    flex: 0 0 auto;
+    padding: 4px 7px;
+    border: 1px solid rgba(198, 164, 92, 0.45);
+    border-radius: 2px;
+    color: var(--gold-bright);
+    background: rgba(198, 164, 92, 0.06);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+}
+
+.runografo-upgrade-status.is-complete { color: #8ceeff; border-color: rgba(94, 231, 255, 0.45); background: rgba(94, 231, 255, 0.06); }
+.runografo-upgrade-requirements { display: flex; flex-direction: column; gap: 10px; }
+
+.runografo-upgrade-requirement {
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    background: rgba(0, 0, 0, 0.16);
+}
+
+.runografo-upgrade-requirement.is-complete { border-color: rgba(94, 231, 255, 0.25); }
+.runografo-upgrade-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.runografo-upgrade-row strong { min-width: 0; color: var(--ivory); font-size: 12px; font-weight: 400; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.runografo-upgrade-row span { flex: 0 0 auto; color: var(--gold-bright); font-size: 11px; }
+
+.runografo-upgrade-progress {
+    height: 5px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(198, 164, 92, 0.22);
+    background: rgba(0, 0, 0, 0.32);
+}
+
+.runografo-upgrade-progress span { display: block; width: 0; height: 100%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-bright)); transition: width 180ms ease-out; }
+.runografo-upgrade-owned { margin-top: 6px; color: var(--muted); font-size: 9px; }
+.runografo-upgrade-owned strong { color: var(--ivory); font-weight: 400; }
+
+.runografo-upgrade-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 7px; margin-top: 8px; }
+.runografo-upgrade-form input { min-width: 0; padding: 7px 9px; border: 1px solid var(--gold-dark); border-radius: 2px; outline: none; color: var(--ivory); background: rgba(5, 6, 8, 0.78); }
+.runografo-upgrade-form input:focus { border-color: var(--gold); }
+.runografo-upgrade-button:disabled { opacity: 0.45; cursor: not-allowed; }
+.runografo-upgrade-complete { margin-top: 8px; color: #8ceeff; font-size: 8px; font-weight: 700; letter-spacing: 0.10em; }
+
+@media (max-width: 560px) {
+    .runografo-upgrade-form { grid-template-columns: 1fr; }
+    .runografo-upgrade-button { width: 100%; }
+}
