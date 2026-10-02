@@ -19,7 +19,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 12,
         y: 4,
         encounter_id: "combat_1",
-        token: "immagini/eventi/combat_goblin.png"
+        token: "../../immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -27,7 +27,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 7,
         y: 11,
         encounter_id: "combat_2",
-        token: "immagini/eventi/combat_goblin.png"
+        token: "../../immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -35,7 +35,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 13,
         y: 14,
         encounter_id: "combat_3",
-        token: "immagini/eventi/combat_goblin.png"
+        token: "../../immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -43,7 +43,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 19,
         y: 11,
         encounter_id: "combat_4",
-        token: "immagini/eventi/combat_goblin.png"
+        token: "../../immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -51,7 +51,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 11,
         y: 20,
         encounter_id: "combat_5",
-        token: "immagini/eventi/combat_goblin.png"
+        token: "../../immagini/eventi/combat_goblin.png"
     },
 
     {
@@ -59,7 +59,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 19,
         y: 20,
         encounter_id: "combat_boss",
-        token: "immagini/nemici/goblin_boss.png"
+        token: "../../immagini/nemici/goblin_boss.png"
     },
 
     {
@@ -67,7 +67,7 @@ const DUNGEON_COMBAT_EVENTS = [
         x: 1,
         y: 14,
         type: "pvp",
-        token: "immagini/eventi/token_pvp.png"
+        token: "../../immagini/eventi/token_pvp.png"
     }
 
 ];
