@@ -161,7 +161,7 @@
     ],
     "uncommon": [
       "Ci sono solo due trappole in questo livello.",
-      "Le scale protette dal boss sono migliori di quelle non protette."
+      "Le scale protette dal boss sono migliori di quelle non protette da nessuno."
     ],
     "rare": [
       "C'è un unico dito di scimmia in questo livello del dungeon, nascosto da qualche parte; serve per completare la mano di scimmia."
@@ -286,6 +286,36 @@
     "stupid_question": "risponde sarcastico",
     "unknown_question": "fa spallucce"
   },
+  "relationships": [
+    {
+      "npc_name": "Occhio di Lince",
+      "relation": "Cugino",
+      "public_view": "È suo cugino e lavora come Runografo nella Base.",
+      "private_view": "Lo rispetta, anche se trova il suo modo di fare fin troppo metodico.",
+      "opinion": "È preciso, osservatore e molto preso dal proprio lavoro di Runografo."
+    },
+    {
+      "npc_name": "Coda d'Orso",
+      "relation": "Cugino",
+      "public_view": "È suo cugino e si occupa di addestrare i PG nella Base.",
+      "private_view": "Lo considera utile e affidabile, anche se probabilmente troppo serio.",
+      "opinion": "È l'addestratore della famiglia, pratico e abituato a giudicare le capacità degli altri."
+    },
+    {
+      "npc_name": "Fegato d'Oca",
+      "relation": "Cugino",
+      "public_view": "È suo cugino e gestisce la locanda.",
+      "private_view": "Gli riconosce un buon fiuto per gli affari, anche se in un settore diverso dal suo.",
+      "opinion": "È il locandiere della famiglia e gestisce il ristoro e l'accoglienza nella Base."
+    },
+    {
+      "npc_name": "Dente di Castoro",
+      "relation": "Cugino",
+      "public_view": "È suo cugino e procura lavori e incarichi.",
+      "private_view": "Lo considera uno che sa sempre come tenere occupata la gente.",
+      "opinion": "È il quest giver della famiglia e affida incarichi ai PG."
+    }
+  ],
   "behavior_rules": {
     "can_lie": true,
     "when_lies": [

@@ -23,7 +23,7 @@ const RUNOGRAFO_VENDOR_ID =
 // Per ora utilizziamo la stessa IA di Mano di Scimmia,
 // come deciso per la prima versione.
 const TEMP_AI_NPC_ID =
-    "npc_manodiscimmia";
+    "npc_occhio_di_lince";
 
 const BASE_PAGE =
     "../../base.html";
