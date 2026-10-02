@@ -1567,7 +1567,7 @@ async function sendAiMessage() {
                 {
                     body: {
                         npc_id:
-                            TEMP_AI_NPC_ID,
+                            RUNOGRAFO_AI_NPC_ID,
 
                         message:
                             message,
