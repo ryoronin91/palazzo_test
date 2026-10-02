@@ -1564,7 +1564,7 @@ function openCombatPrompt(
                 // al cambio pagina.
 
                 window.location.href =
-                    `combat.html?combat_id=${encodeURIComponent(
+                    `../../combat.html?combat_id=${encodeURIComponent(
                         combatId
                     )}`;
 
