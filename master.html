@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Master - Palazzo Eterno</title>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="css/master.css?v=22" rel="stylesheet"/>
+<style>
+
+    /* ========================================================
+       EVENTI VISIBILI AL MASTER
+    ======================================================== */
+
+    .master-event-marker {
+
+        position: absolute;
+
+        z-index: 80;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+        transform-origin: center;
+
+        border-radius: 50%;
+
+        font-family:
+            Arial,
+            sans-serif;
+
+        font-weight: 800;
+
+        line-height: 1;
+
+        cursor: help;
+
+        user-select: none;
+
+        box-sizing: border-box;
+
+        box-shadow:
+            0 2px 8px
+            rgba(
+                0,
+                0,
+                0,
+                0.75
+            );
+
+        pointer-events: auto;
+
+    }
+
+
+    .master-event-marker.is-communication {
+
+        color:
+            #ffe59a;
+
+        background:
+            rgba(
+                79,
+                55,
+                10,
+                0.88
+            );
+
+        border:
+            2px solid
+            #d4aa45;
+
+        font-size:
+            clamp(
+                10px,
+                1vw,
+                18px
+            );
+
+    }
+
+
+    .master-event-marker.is-trap {
+
+        border:
+            2px solid;
+
+        font-size:
+            clamp(
+                10px,
+                1vw,
+                18px
+            );
+
+    }
+
+
+    .master-event-marker.is-trap.is-active {
+
+        color:
+            #ffffff;
+
+        background:
+            rgba(
+                145,
+                15,
+                15,
+                0.92
+            );
+
+        border-color:
+            #ff5757;
+
+    }
+
+
+    .master-event-marker.is-trap.is-cooldown {
+
+        color:
+            #dedede;
+
+        background:
+            rgba(
+                55,
+                55,
+                55,
+                0.9
+            );
+
+        border-color:
+            #999999;
+
+    }
+
+
+    .master-event-icon {
+
+        display: block;
+
+        line-height: 0.9;
+
+    }
+
+
+    .master-event-countdown {
+
+        display: block;
+
+        margin-top: 1px;
+
+        font-size:
+            clamp(
+                6px,
+                0.55vw,
+                10px
+            );
+
+        line-height: 1;
+
+        white-space: nowrap;
+
+    }
+
+</style>
+</head>
+<body>
+<main class="master-page master-page-redesigned">
+<section aria-label="Pannello amministrazione Palazzo Eterno" class="master-layout">
+<aside aria-label="Navigazione Master" class="master-navigation">
+<div class="master-navigation-brand"><span class="master-label">PALAZZO ETERNO</span><h1>MODALITÀ MASTER</h1></div>
+<nav aria-label="Sezioni gestione" class="master-control-tabs"><button aria-current="page" class="master-control-tab is-active" data-master-control-tab="overview" type="button">Panoramica</button>
+<button aria-current="false" class="master-control-tab" data-master-control-tab="players" type="button">Giocatori</button>
+<button aria-current="false" class="master-control-tab" data-master-control-tab="services" type="button">Vendor / Servizi</button>
+<button aria-current="false" class="master-control-tab" data-master-control-tab="combats" type="button">Combattimenti</button>
+<button aria-current="false" class="master-control-tab" data-master-control-tab="events" type="button">Eventi / Segreti</button>
+<button aria-current="false" class="master-control-tab" data-master-control-tab="bacheca" type="button">Bacheca</button></nav>
+<div class="master-navigation-foot">Centro di controllo del Palazzo</div>
+</aside>
+<section aria-label="Gestione del gioco" class="master-main-column">
+<div class="master-control-center master-control-center-inline" id="master-control-center">
+<div class="master-control-center-head"><div><span class="master-label">GESTIONE PALAZZO</span><h2 id="master-control-center-title">PANORAMICA</h2><p id="master-panel-description">Stato operativo generale del gioco.</p></div><div class="master-control-refresh-wrap"><span aria-live="polite" class="master-control-refresh-status" id="master-control-refresh-status"></span><button class="button secondary" id="master-control-refresh" type="button">AGGIORNA DATI</button></div></div>
+<div class="master-control-body"><section class="master-control-pane is-active" data-master-control-pane="overview"><div class="master-overview-clean">
+<div class="master-overview-map-toolbar">
+<span class="master-overview-floor-name" id="master-overview-floor-name">PIANO 1</span>
+<div aria-label="Cambia piano visualizzato" class="master-overview-slider" role="group">
+<button aria-label="Piano precedente" class="master-overview-slide-button" id="master-overview-prev" type="button">‹</button>
+<span aria-live="polite" class="master-overview-slide-count" id="master-overview-slide-count">1 / 2</span>
+<button aria-label="Piano successivo" class="master-overview-slide-button" id="master-overview-next" type="button">›</button>
+</div>
+</div>
+<div aria-label="Mappa con giocatori, combattimenti, trappole, eventi e servizi" class="master-overview-map" id="master-overview-map" role="region">
+<img alt="Mappa del Piano 1" id="master-overview-map-image" src="immagini/dungeon-test.png?v=2"/>
+</div>
+</div></section>
+<section class="master-control-pane master-players-view" data-master-control-pane="players">
+<div class="master-pg-toolbar">
+<div><span class="panel-label">ARCHIVIO PERSONAGGI</span><h3 id="master-pg-title">TUTTI I GIOCATORI</h3></div>
+<button class="button secondary" hidden="" id="master-pg-back" type="button">← TORNA ALL'ELENCO</button>
+</div>
+<div id="master-pg-browser">
+<label class="master-pg-search-label" for="master-pg-search">Cerca un personaggio</label>
+<input autocomplete="off" id="master-pg-search" placeholder="Nome, piano, livello..." type="search"/>
+<div class="master-pg-list" id="master-pg-list">Caricamento personaggi...</div>
+</div>
+<div aria-live="polite" class="master-pg-sheet" hidden="" id="master-pg-sheet"></div>
+</section>
+<section class="master-control-pane master-services-pane" data-master-control-pane="services">
+<div class="master-control-section-head master-services-heading">
+<div><span class="panel-label">LIVELLO BASE · CONTROLLO MASTER</span><h3>VENDOR E SERVIZI</h3>
+<p>Gestisci stati, avanzamento delle risorse e durata dei servizi. Le risorse e le monete aggiunte qui sono crediti amministrativi: non vengono sottratte ai personaggi.</p></div>
+<button class="button secondary" id="master-services-refresh" type="button">AGGIORNA SERVIZI</button>
+</div>
+<div aria-live="polite" class="master-services-feedback" id="master-services-feedback" role="status"></div>
+<div class="master-control-list master-control-services-grid" id="master-control-services"><div class="master-control-empty">Caricamento servizi...</div></div>
+</section>
+<section class="master-control-pane master-combats-management-pane" data-master-control-pane="combats">
+<div class="master-combat-manage-header">
+<div><span class="panel-label">GESTIONE INCONTRI</span>
+<h3>COMBATTIMENTI DEL PALAZZO</h3>
+<p>Gestisci la disponibilità e i cooldown degli incontri. Le sessioni in corso sono protette.</p>
+</div>
+<button class="button secondary" id="master-combats-refresh" type="button">AGGIORNA INCONTRI</button>
+</div>
+<div aria-live="polite" class="master-combats-feedback" id="master-combats-feedback" role="status"></div>
+<div aria-live="polite" class="master-combats-overview" id="master-combats-overview">
+<div class="master-control-empty">Caricamento combattimenti...</div>
+</div>
+</section>
+<section class="master-control-pane master-events-management-pane" data-master-control-pane="events">
+<div class="master-events-management-head">
+<div>
+<span class="panel-label">CONTROLLO EVENTI</span>
+<h3>EVENTI E SEGRETI</h3>
+<p>Attiva o disattiva gli eventi del Piano 1. Le trappole conservano il loro cooldown naturale.</p>
+</div>
+<button class="button secondary" id="master-events-refresh" type="button">AGGIORNA EVENTI</button>
+</div>
+<p aria-live="polite" class="master-events-feedback" id="master-events-feedback" role="status"></p>
+<h4 class="master-events-group-title">EVENTI <span>4</span></h4>
+<div class="master-events-management-grid" id="master-events-management-list">
+<div class="master-control-empty">Caricamento eventi...</div>
+</div>
+<h4 class="master-events-group-title master-events-secrets-heading">SEGRETI <span>1</span></h4>
+<section aria-label="Password del Boss" class="master-event-secret-card">
+<div class="master-event-secret-icon">🔐</div>
+<div class="master-event-secret-copy">
+<strong>Password del Boss</strong>
+<span>Accesso alla stanza del Goblin Boss</span>
+<div class="master-event-password-readout"><strong id="master-boss-password">Caricamento...</strong><small id="master-boss-password-expiry">Verifica in corso...</small></div>
+</div>
+</section>
+<div aria-hidden="true" class="master-events-hidden" hidden="">
+<div id="master-map"><img alt="" id="master-map-image" src="immagini/dungeon-test.png?v=2"/></div>
+<div id="master-message"></div>
+<div id="master-floor-title"></div>
+<button data-master-floor="dungeon" id="master-floor-dungeon" type="button"></button>
+<button data-master-floor="base" id="master-floor-base" type="button"></button>
+<div class="master-monkey-finger-panel"><strong id="master-monkey-finger-status"></strong><span id="master-monkey-finger-owner"></span></div>
+<strong id="master-control-player-count"></strong><small id="master-control-player-detail"></small>
+<strong id="master-control-combat-count"></strong><small id="master-control-combat-detail"></small>
+<strong id="master-control-boss-state"></strong><small id="master-control-boss-detail"></small>
+<strong id="master-control-unique-count"></strong><small id="master-control-unique-detail"></small>
+<strong id="master-control-boss-password"></strong><span id="master-control-boss-password-expiry"></span>
+</div>
+</section>
+<section class="master-control-pane" data-master-control-pane="bacheca">
+<div class="master-control-section-head">
+<div>
+<span class="panel-label">COMUNICAZIONI PUBBLICHE</span>
+<h3>MODIFICA BACHECA</h3>
+<p>Una riga = una voce. L'ordine delle righe è l'ordine mostrato ai giocatori.</p>
+</div>
+</div>
+<div class="master-noticeboard-editor-grid">
+<label class="master-noticeboard-editor">
+<span>NOVITÀ</span>
+<textarea id="master-noticeboard-novita" placeholder="Una voce per riga" rows="10"></textarea>
+</label>
+<label class="master-noticeboard-editor">
+<span>PROSSIMI UPGRADE</span>
+<textarea id="master-noticeboard-upgrade" placeholder="Una voce per riga" rows="10"></textarea>
+</label>
+<label class="master-noticeboard-editor">
+<span>BUG & SUGGERIMENTI</span>
+<textarea id="master-noticeboard-avvisi" placeholder="Una voce per riga" rows="10"></textarea>
+</label>
+</div>
+<div class="master-noticeboard-actions">
+<span id="master-noticeboard-feedback"></span>
+<button class="button" id="master-noticeboard-save" type="button">SALVA BACHECA</button>
+</div>
+</section></div>
+</div>
+</section>
+<aside aria-label="Strumenti permanenti" class="master-right-column">
+<div class="master-header-actions master-right-actions"><a class="button secondary" href="scheda.html">SCHEDA</a><button class="button secondary" id="logout-button" type="button">ESCI</button></div>
+<aside class="master-players-panel master-dashboard-panel">
+<div class="master-panel-header">
+<span class="panel-label">PRESENZE</span>
+<h2>PERSONAGGI</h2>
+<div class="master-online-count" id="master-online-count">
+                            Connessione...
+                        </div>
+</div>
+<div class="master-player-list" id="master-player-list">
+<div class="master-player-empty">
+                            Nessun personaggio nel gioco.
+                        </div>
+</div>
+</aside>
+<aside class="master-chat-panel master-dashboard-panel">
+<div class="master-chat-header">
+<span class="panel-label">BASE + PIANO 1</span>
+<h2>CHAT</h2>
+<div class="master-chat-status" id="master-chat-status">
+                            Connessione...
+                        </div>
+</div>
+<div class="master-chat-messages" id="master-chat-messages">
+<div class="master-chat-empty">
+                            Nessun messaggio ancora.
+                        </div>
+</div>
+<form class="master-chat-form" id="master-chat-form">
+<label class="master-chat-label" for="master-chat-input">
+                            MESSAGGIO
+                        </label>
+<textarea class="master-chat-input" disabled="" id="master-chat-input" maxlength="300" placeholder="Scrivi come Master (massimo 300 caratteri)..."></textarea>
+<label class="master-chat-label master-chat-destination-label" for="master-chat-destination">INVIA A</label>
+<select aria-label="Destinazione messaggio Master" class="master-chat-destination" id="master-chat-destination">
+<option value="both">Entrambi i piani</option>
+<option value="base">Livello Base</option>
+<option value="dungeon">Piano 1</option>
+</select>
+<div class="master-chat-actions">
+<div class="master-chat-feedback" id="master-chat-feedback"></div>
+<button class="button master-chat-send" disabled="" id="master-chat-send" type="submit">
+                                INVIA
+                            </button>
+</div>
+</form>
+</aside>
+</aside>
+</section>
+<div class="master-modal" hidden="" id="master-character-modal">
+<div class="master-modal-backdrop" data-close-master-modal=""></div>
+<section aria-labelledby="master-character-name" aria-modal="true" class="master-character-card" role="dialog">
+<button aria-label="Chiudi scheda" class="master-modal-close" id="master-modal-close" type="button">
+                    ×
+                </button>
+<div class="master-character-top">
+<div class="master-character-token-wrapper">
+<img alt="" class="master-character-token" id="master-character-token" src=""/>
+</div>
+<div class="master-character-identity">
+<span class="panel-label">
+                            PERSONAGGIO
+                        </span>
+<h2 id="master-character-name">
+                            Caricamento...
+                        </h2>
+<div class="master-character-level" id="master-character-level">
+                            Livello 1
+                        </div>
+</div>
+</div>
+<!-- ==================================================
+                     ATTRIBUTI
+                =================================================== -->
+<h3>
+                    ATTRIBUTI
+                </h3>
+<div class="master-attributes-grid">
+<div class="master-stat-box">
+<span>FOR</span>
+<strong id="master-forza">1</strong>
+</div>
+<div class="master-stat-box">
+<span>RES</span>
+<strong id="master-resistenza">1</strong>
+</div>
+<div class="master-stat-box">
+<span>COS</span>
+<strong id="master-costituzione">1</strong>
+</div>
+<div class="master-stat-box">
+<span>INT</span>
+<strong id="master-intelligenza">1</strong>
+</div>
+<div class="master-stat-box">
+<span>DES</span>
+<strong id="master-destrezza">1</strong>
+</div>
+<div class="master-stat-box">
+<span>LCK</span>
+<strong id="master-fortuna">1</strong>
+</div>
+</div>
+<!-- ==================================================
+                     STATISTICHE
+                =================================================== -->
+<h3>
+                    STATISTICHE
+                </h3>
+<div class="master-secondary-grid">
+<div class="master-secondary-box">
+<span>ATTACCO</span>
+<strong id="master-attack">1</strong>
+</div>
+<div class="master-secondary-box">
+<span>DIFESA</span>
+<strong id="master-defense">8</strong>
+</div>
+<div class="master-secondary-box">
+<span>VITA</span>
+<strong id="master-life">3</strong>
+</div>
+<div class="master-secondary-box">
+<span>MANA</span>
+<strong id="master-mana">3</strong>
+</div>
+<div class="master-secondary-box">
+<span>MOVIMENTO</span>
+<strong id="master-movement">5</strong>
+</div>
+<div class="master-secondary-box">
+<span>CRITICO</span>
+<strong id="master-critical">2%</strong>
+</div>
+</div>
+<div class="master-character-runtime">
+<div class="master-runtime-box">
+<span>STATO</span>
+<strong id="master-character-online-status">OFFLINE</strong>
+</div>
+<div class="master-runtime-box">
+<span>PF ATTUALI</span>
+<strong id="master-character-current-hp">-</strong>
+</div>
+<div class="master-runtime-box">
+<span>PM ATTUALI</span>
+<strong id="master-character-current-pm">-</strong>
+</div>
+<div class="master-runtime-box master-runtime-score">
+<span>SCORE</span>
+<strong id="master-character-score">0</strong>
+</div>
+<div class="master-runtime-box master-runtime-finger">
+<span>DITO DI SCIMMIA</span>
+<strong id="master-character-monkey-finger">NO</strong>
+</div>
+</div>
+<div class="master-character-combat-box" hidden="" id="master-character-combat-box">
+<div>
+<span>COMBATTIMENTO ATTIVO</span>
+<strong id="master-character-combat-label">-</strong>
+</div>
+<button class="button master-observe-button" id="master-character-observe-combat" type="button">
+                        OSSERVA COMBATTIMENTO
+                    </button>
+</div>
+<div class="master-character-position">
+<span>
+                        POSIZIONE
+                    </span>
+<strong id="master-character-position">
+                        X 0 • Y 0
+                    </strong>
+</div>
+</section>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js?v=2"></script>
+<script src="js/master.js?v=22"></script>
+</body></html>

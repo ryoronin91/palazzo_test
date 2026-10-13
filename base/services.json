@@ -1,0 +1,96 @@
+{
+    "services": [
+        {
+            "id": "runografo",
+            "name": "Runografo",
+            "description": "Il Runografo è un artigiano che vende e potenzia le pergamene abilità.",
+            "area": {
+                "x": 17,
+                "y": 20,
+                "width": 3,
+                "height": 2
+            },
+            "npc": {
+                "x": 18,
+                "y": 21,
+                "width": 1,
+                "height": 1,
+                "image": "../immagini/eventi/runografo.png",
+                "alt": "Runografo",
+                "zIndex": 13
+            },
+            "construction_note_1": "Tutti i giocatori possono contribuire alla costruzione. Quando tutti i requisiti saranno completati, inizierà l'evocazione del Runografo.",
+            "construction_note_2": "La costruzione richiederà 1 ora. Una volta evocato, il Runografo resterà disponibile solo per un tempo limitato, a meno che i giocatori non continuino a riempire la sua riserva di monete.",
+            "building_note": "Al termine dell'evocazione il Runografo diventerà operativo e inizierà a consumare la propria riserva di monete."
+        },
+        {
+            "id": "locanda",
+            "name": "Locanda",
+            "description": "La Locanda di Fegato d'Oca permette di riposare, recuperare PF e PM e acquistare un Pasto Caldo.",
+            "area": {
+                "x": 3,
+                "y": 14,
+                "width": 4,
+                "height": 6
+            },
+            "npc": {
+                "x": 4,
+                "y": 15,
+                "width": 1,
+                "height": 1,
+                "image": "../immagini/eventi/fegato_oca.png",
+                "alt": "Fegato d'Oca",
+                "zIndex": 13
+            },
+            "construction_note_1": "Tutti i giocatori possono contribuire alla costruzione. Quando tutti i requisiti saranno completati, inizierà la costruzione della Locanda.",
+            "construction_note_2": "La costruzione richiederà 1 ora. Una volta completata, la Locanda resterà disponibile solo per un tempo limitato, a meno che i giocatori non continuino a riempire la sua riserva di monete.",
+            "building_note": "Al termine della costruzione la Locanda diventerà operativa e inizierà a consumare la propria riserva di monete."
+        },
+        {
+            "id": "addestratore",
+            "name": "Addestratore",
+            "description": "Coda d'Orso permette di ridistribuire i 10 punti iniziali e di allenare permanentemente le statistiche.",
+            "area": {
+                "x": 21,
+                "y": 17,
+                "width": 2,
+                "height": 3
+            },
+            "npc": {
+                "x": 22,
+                "y": 18,
+                "width": 1,
+                "height": 1,
+                "image": "../immagini/eventi/train.png",
+                "alt": "Coda d'Orso",
+                "zIndex": 13
+            },
+            "construction_note_1": "Tutti i giocatori possono contribuire alla costruzione. Quando tutti i requisiti saranno completati, inizierà la costruzione dell'Addestratore.",
+            "construction_note_2": "La costruzione richiederà 1 ora. Una volta completato, l'Addestratore resterà disponibile solo per un tempo limitato, a meno che i giocatori non continuino a riempire la sua riserva di monete.",
+            "building_note": "Al termine della costruzione l'Addestratore diventerà operativo e inizierà a consumare la propria riserva di monete."
+        },
+        {
+            "id": "quest_giver",
+            "name": "Missioni",
+            "description": "Dente di Castoro controlla le missioni completate e consegna le ricompense.",
+            "area": {
+                "x": 12,
+                "y": 20,
+                "width": 3,
+                "height": 2
+            },
+            "npc": {
+                "x": 13,
+                "y": 21,
+                "width": 1,
+                "height": 1,
+                "image": "../immagini/eventi/quest.png",
+                "alt": "Dente di Castoro",
+                "zIndex": 13
+            },
+            "construction_note_1": "Tutti i giocatori possono contribuire alla costruzione. Quando tutti i requisiti saranno completati, inizierà la costruzione del centro Missioni.",
+            "construction_note_2": "La costruzione richiederà 1 ora. Una volta completato, il centro Missioni resterà disponibile solo per un tempo limitato, a meno che i giocatori non continuino a riempire la sua riserva di monete.",
+            "building_note": "Al termine della costruzione il centro Missioni diventerà operativo e inizierà a consumare la propria riserva di monete."
+        }
+    ]
+}

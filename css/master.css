@@ -1,0 +1,2992 @@
+/* ============================================================
+   PALAZZO ETERNO
+   MASTER.CSS
+   ============================================================ */
+
+
+/* ============================================================
+   PAGINA
+   ============================================================ */
+
+.master-page {
+
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.master-header {
+
+    width: 100%;
+    max-width: 1650px;
+
+    margin: 0 auto 18px auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.master-header h1 {
+
+    margin: 4px 0;
+
+}
+
+
+.master-header p {
+
+    margin: 0;
+
+    opacity: 0.65;
+
+}
+
+
+.master-label {
+
+    font-size: 0.72rem;
+
+    letter-spacing: 0.14em;
+
+    font-weight: 800;
+
+    color: #b88a3b;
+
+}
+
+
+.master-header-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.master-layout {
+
+    width: 100%;
+    max-width: 1650px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        280px
+        minmax(0, 1fr);
+
+    gap: 20px;
+
+    align-items: start;
+
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.master-sidebar {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+    position: sticky;
+
+    top: 20px;
+
+}
+
+
+/* ============================================================
+   PANNELLO GIOCATORI
+   ============================================================ */
+
+.master-players-panel {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border-radius: 14px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.38);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(0, 0, 0, 0.22)
+        );
+
+    overflow: hidden;
+
+}
+
+
+.master-panel-header {
+
+    padding: 16px;
+
+    border-bottom:
+        1px solid rgba(184, 138, 59, 0.25);
+
+}
+
+
+.master-panel-header h2 {
+
+    margin:
+        5px
+        0
+        7px;
+
+    font-size: 1rem;
+
+}
+
+
+.master-online-count {
+
+    font-size: 0.76rem;
+
+    opacity: 0.65;
+
+}
+
+
+/* ============================================================
+   LISTA GIOCATORI
+   ============================================================ */
+
+.master-player-list {
+
+    padding: 10px;
+
+}
+
+
+.master-player-empty {
+
+    padding: 15px 8px;
+
+    font-size: 0.8rem;
+
+    opacity: 0.55;
+
+}
+
+
+.master-player-item {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px;
+
+    margin-bottom: 7px;
+
+    box-sizing: border-box;
+
+    border-radius: 10px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    color: inherit;
+
+    font: inherit;
+
+    text-align: left;
+
+    cursor: pointer;
+
+}
+
+
+.master-player-item:hover {
+
+    border-color:
+        rgba(184, 138, 59, 0.5);
+
+    background:
+        rgba(184, 138, 59, 0.08);
+
+}
+
+
+.master-player-item img {
+
+    width: 42px;
+    height: 42px;
+
+    object-fit: contain;
+
+    flex: 0 0 auto;
+
+}
+
+
+.master-player-info {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.master-player-name {
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+.master-player-position {
+
+    margin-top: 2px;
+
+    font-size: 0.68rem;
+
+    opacity: 0.55;
+
+}
+
+
+/* ============================================================
+   CHAT MASTER
+   ============================================================ */
+
+.master-chat-panel {
+
+    width: 100%;
+
+    height: 430px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    border-radius: 14px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.38);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(0, 0, 0, 0.22)
+        );
+
+    overflow: hidden;
+
+}
+
+
+.master-chat-header {
+
+    padding: 14px;
+
+    border-bottom:
+        1px solid rgba(184, 138, 59, 0.25);
+
+}
+
+
+.master-chat-header h2 {
+
+    margin:
+        5px
+        0
+        6px;
+
+    font-size: 1rem;
+
+}
+
+
+.master-chat-status {
+
+    font-size: 0.72rem;
+
+    opacity: 0.6;
+
+}
+
+
+.master-chat-status.is-online {
+
+    opacity: 0.9;
+
+}
+
+
+/* ============================================================
+   MESSAGGI CHAT
+   ============================================================ */
+
+.master-chat-messages {
+
+    flex: 1;
+
+    min-height: 0;
+
+    padding: 10px;
+
+    overflow-y: auto;
+
+}
+
+
+.master-chat-empty {
+
+    padding: 8px;
+
+    font-size: 0.78rem;
+
+    opacity: 0.5;
+
+}
+
+
+.master-chat-message {
+
+    margin-bottom: 9px;
+
+    padding: 8px;
+
+    border-radius: 9px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.07);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+}
+
+
+.master-chat-message.is-master {
+
+    border-color:
+        rgba(184, 138, 59, 0.5);
+
+    background:
+        rgba(184, 138, 59, 0.1);
+
+}
+
+
+.master-chat-meta {
+
+    margin-bottom: 4px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+}
+
+
+.master-chat-meta strong {
+
+    font-size: 0.72rem;
+
+    color: #b88a3b;
+
+}
+
+
+.master-chat-meta span {
+
+    font-size: 0.62rem;
+
+    opacity: 0.45;
+
+}
+
+
+.master-chat-body {
+
+    font-size: 0.8rem;
+
+    line-height: 1.4;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+/* ============================================================
+   FORM CHAT
+   ============================================================ */
+
+.master-chat-form {
+
+    padding: 10px;
+
+    border-top:
+        1px solid rgba(184, 138, 59, 0.25);
+
+}
+
+
+.master-chat-label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 0.65rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.08em;
+
+    opacity: 0.6;
+
+}
+
+
+.master-chat-input {
+
+    width: 100%;
+
+    min-height: 65px;
+
+    max-height: 120px;
+
+    resize: vertical;
+
+    padding: 8px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.35);
+
+    background:
+        rgba(0, 0, 0, 0.25);
+
+    color: inherit;
+
+    font: inherit;
+
+    font-size: 0.8rem;
+
+}
+
+
+.master-chat-input:focus {
+
+    outline:
+        1px solid rgba(184, 138, 59, 0.7);
+
+}
+
+
+.master-chat-actions {
+
+    margin-top: 7px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+}
+
+
+.master-chat-feedback {
+
+    flex: 1;
+
+    font-size: 0.67rem;
+
+    opacity: 0.6;
+
+}
+
+
+/* ============================================================
+   MAPPA
+   ============================================================ */
+
+.master-map-column {
+
+    min-width: 0;
+
+}
+
+
+.master-map {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+    overflow: hidden;
+
+}
+
+
+#master-map-image {
+
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: 100%;
+
+    object-fit: contain;
+
+}
+
+
+/* ============================================================
+   TOKEN
+   ============================================================ */
+
+.master-player-token {
+
+    position: absolute;
+
+    z-index: 100;
+
+    object-fit: contain;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.12s ease,
+        filter 0.12s ease;
+
+}
+
+
+.master-player-token:hover {
+
+    transform: scale(1.15);
+
+    filter: brightness(1.2);
+
+    z-index: 110;
+
+}
+
+
+/* ============================================================
+   MESSAGGIO
+   ============================================================ */
+
+.master-message {
+
+    margin-top: 10px;
+
+    text-align: center;
+
+    min-height: 22px;
+
+    font-size: 0.8rem;
+
+    opacity: 0.65;
+
+}
+
+
+/* ============================================================
+   MODALE
+   ============================================================ */
+
+.master-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+}
+
+
+.master-modal[hidden] {
+
+    display: none;
+
+}
+
+
+.master-modal-backdrop {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, 0.78);
+
+    backdrop-filter:
+        blur(4px);
+
+}
+
+
+/* ============================================================
+   SCHEDA PERSONAGGIO
+   ============================================================ */
+
+.master-character-card {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: calc(100% - 30px);
+    max-width: 620px;
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    margin: 20px auto;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    border-radius: 18px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.55);
+
+    background:
+        rgba(20, 20, 20, 0.98);
+
+    box-shadow:
+        0
+        18px
+        60px
+        rgba(0, 0, 0, 0.65);
+
+}
+
+
+.master-modal-close {
+
+    position: absolute;
+
+    top: 10px;
+    right: 13px;
+
+    width: 40px;
+    height: 40px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: inherit;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    opacity: 0.7;
+
+}
+
+
+.master-modal-close:hover {
+
+    opacity: 1;
+
+}
+
+
+/* ============================================================
+   TESTATA PERSONAGGIO
+   ============================================================ */
+
+.master-character-top {
+
+    display: grid;
+
+    grid-template-columns:
+        130px
+        1fr;
+
+    gap: 22px;
+
+    align-items: center;
+
+    margin-bottom: 26px;
+
+}
+
+
+.master-character-token-wrapper {
+
+    width: 130px;
+    height: 130px;
+
+}
+
+
+.master-character-token {
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+}
+
+
+.master-character-identity h2 {
+
+    margin:
+        4px
+        0
+        6px;
+
+    font-size: 2rem;
+
+}
+
+
+.master-character-level {
+
+    opacity: 0.7;
+
+}
+
+
+/* ============================================================
+   ATTRIBUTI
+   ============================================================ */
+
+.master-character-card h3 {
+
+    margin:
+        22px
+        0
+        10px;
+
+    font-size: 0.8rem;
+
+    letter-spacing: 0.1em;
+
+    opacity: 0.7;
+
+}
+
+
+.master-attributes-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 8px;
+
+}
+
+
+.master-stat-box {
+
+    padding: 10px 5px;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.32);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+}
+
+
+.master-stat-box span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 0.65rem;
+
+    opacity: 0.6;
+
+}
+
+
+.master-stat-box strong {
+
+    font-size: 1.3rem;
+
+    color: #b88a3b;
+
+}
+
+
+/* ============================================================
+   SECONDARIE
+   ============================================================ */
+
+.master-secondary-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 9px;
+
+}
+
+
+.master-secondary-box {
+
+    padding: 12px;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    border:
+        1px solid rgba(184, 138, 59, 0.36);
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+}
+
+
+.master-secondary-box span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 0.67rem;
+
+    opacity: 0.65;
+
+}
+
+
+.master-secondary-box strong {
+
+    display: block;
+
+    font-size: 1.45rem;
+
+    color: #b88a3b;
+
+}
+
+
+/* ============================================================
+   POSIZIONE
+   ============================================================ */
+
+.master-character-position {
+
+    margin-top: 20px;
+
+    padding-top: 14px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    border-top:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    font-size: 0.8rem;
+
+}
+
+
+.master-character-position span {
+
+    opacity: 0.55;
+
+}
+
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .master-layout {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .master-sidebar {
+
+        position: relative;
+
+        top: auto;
+
+    }
+
+
+    .master-player-list {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 8px;
+
+    }
+
+
+    .master-player-item {
+
+        margin: 0;
+
+    }
+
+
+    .master-chat-panel {
+
+        height: 380px;
+
+    }
+
+}
+
+
+/* ============================================================
+   TELEFONO
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .master-page {
+
+        padding: 10px;
+
+    }
+
+
+    .master-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+    }
+
+
+    .master-player-list {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .master-character-card {
+
+        padding:
+            24px
+            16px;
+
+    }
+
+
+    .master-character-top {
+
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+    }
+
+
+    .master-character-token-wrapper {
+
+        margin: 0 auto;
+
+    }
+
+
+    .master-attributes-grid {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+    }
+
+
+    .master-secondary-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+/* ============================================================
+   DASHBOARD MASTER - ESTENSIONI v3
+   ============================================================ */
+
+.master-combats-panel {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 14px;
+    border: 1px solid rgba(184, 138, 59, 0.38);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(0,0,0,0.22));
+    overflow: hidden;
+}
+
+.master-combat-list {
+    padding: 10px;
+}
+
+.master-combat-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+}
+
+.master-combat-item:last-child { margin-bottom: 0; }
+.master-combat-title { font-size: 0.82rem; font-weight: 800; }
+.master-combat-meta { margin-top: 3px; font-size: 0.67rem; opacity: 0.6; }
+.master-combat-watch { padding: 7px 9px; font-size: 0.68rem; white-space: nowrap; }
+
+.master-map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+    margin: 0 auto 10px;
+    max-width: 1250px;
+    padding: 9px 12px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid rgba(184,138,59,0.25);
+    background: rgba(0,0,0,0.18);
+    font-size: 0.7rem;
+}
+
+.master-map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.legend-dot.is-online { background: #62d783; box-shadow: 0 0 7px rgba(98,215,131,.65); }
+.legend-dot.is-offline { background: #777; }
+.legend-symbol { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; font-style: normal; font-size: 12px; border-radius: 50%; }
+.legend-symbol.combat { background: rgba(110,20,20,.92); color: #fff; }
+.legend-symbol.trap { background: rgba(145,15,15,.92); color: #fff; }
+.legend-symbol.event { background: rgba(79,55,10,.88); color: #ffe59a; }
+
+.master-player-token.is-offline { opacity: 0.48; filter: grayscale(0.72); }
+.master-player-token.is-online { opacity: 1; filter: drop-shadow(0 0 5px rgba(98,215,131,.75)); }
+.master-player-token.is-in-combat { outline: 2px solid #d85656; border-radius: 50%; filter: drop-shadow(0 0 7px rgba(216,86,86,.9)); }
+
+.master-player-status-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.master-status-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    border: 1px solid rgba(255,255,255,.12);
+}
+.master-status-badge.online { color: #82eba0; background: rgba(42,122,63,.16); }
+.master-status-badge.offline { color: #aaa; background: rgba(100,100,100,.12); }
+.master-status-badge.combat { color: #ff9999; background: rgba(150,30,30,.16); }
+
+.master-player-item.is-offline { opacity: 0.72; }
+.master-player-item.is-combat { border-color: rgba(216,86,86,.45); }
+
+.master-inline-watch {
+    margin-left: auto;
+    flex: 0 0 auto;
+    padding: 6px 8px;
+    font-size: 0.62rem;
+}
+
+.master-event-marker.is-combat {
+    color: #fff;
+    background: rgba(96, 17, 17, 0.92);
+    border: 2px solid #d85656;
+    font-size: clamp(10px, 1vw, 17px);
+}
+.master-event-marker.is-combat.has-live-combat {
+    background: rgba(145,15,15,.98);
+    border-color: #ff8b8b;
+    box-shadow: 0 0 0 2px rgba(255,110,110,.18), 0 2px 10px rgba(0,0,0,.8);
+    cursor: pointer;
+}
+
+.master-character-runtime {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-top: 18px;
+}
+.master-runtime-box {
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid rgba(184,138,59,.28);
+    background: rgba(255,255,255,.03);
+}
+.master-runtime-box span { display:block; margin-bottom:5px; font-size:.62rem; opacity:.58; }
+.master-runtime-box strong { font-size:1rem; }
+
+.master-character-combat-box {
+    margin-top: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(216,86,86,.45);
+    background: rgba(125,22,22,.14);
+}
+.master-character-combat-box[hidden] { display: none; }
+.master-character-combat-box span { display:block; font-size:.62rem; opacity:.6; margin-bottom:4px; }
+.master-character-combat-box strong { font-size:.78rem; }
+.master-observe-button { padding: 8px 10px; font-size: .7rem; }
+
+@media (max-width: 600px) {
+    .master-character-runtime { grid-template-columns: 1fr; }
+    .master-character-combat-box { align-items: stretch; flex-direction: column; }
+    .master-observe-button { width: 100%; }
+    .master-combat-item { grid-template-columns: 1fr; }
+    .master-combat-watch { width: 100%; }
+}
+
+
+/* ============================================================
+   DASHBOARD MASTER - ESTENSIONI v4
+   Boss / PvP / Vendor / Score / Dito di Scimmia
+   ============================================================ */
+
+.legend-symbol.boss {
+    background: rgba(105, 52, 13, .95);
+    color: #ffd38a;
+}
+
+.legend-symbol.pvp {
+    background: rgba(91, 25, 121, .92);
+    color: #f1c8ff;
+}
+
+.legend-symbol.vendor {
+    background: rgba(42, 95, 65, .92);
+    color: #c8ffd9;
+}
+
+.master-player-score {
+    margin-top: 4px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #d8b86d;
+}
+
+.master-status-badge.monkey-finger {
+    color: #ffd977;
+    background: rgba(142, 105, 19, .18);
+    border-color: rgba(255, 217, 119, .32);
+}
+
+.master-event-marker.is-boss {
+    color: #fff1cb;
+    background: rgba(105, 52, 13, .96);
+    border-color: #e0a84a;
+    font-size: clamp(10px, 1vw, 17px);
+}
+
+.master-event-marker.is-boss.has-live-combat {
+    background: rgba(143, 58, 13, .98);
+    border-color: #ffca6b;
+    box-shadow:
+        0 0 0 2px rgba(255, 202, 107, .18),
+        0 2px 12px rgba(0, 0, 0, .85);
+}
+
+.master-event-marker.is-special {
+    border: 2px solid;
+    font-size: clamp(10px, 1vw, 17px);
+}
+
+.master-event-marker.is-pvp {
+    color: #f7ddff;
+    background: rgba(91, 25, 121, .92);
+    border-color: #d684f4;
+}
+
+.master-event-marker.is-vendor {
+    color: #d9ffe5;
+    background: rgba(42, 95, 65, .94);
+    border-color: #77d69b;
+}
+
+.master-runtime-box.master-runtime-score strong {
+    color: #e0b85d;
+}
+
+.master-runtime-box.master-runtime-finger.has-monkey-finger {
+    border-color: rgba(255, 217, 119, .6);
+    background: rgba(142, 105, 19, .13);
+}
+
+.master-runtime-box.master-runtime-finger.has-monkey-finger strong {
+    color: #ffd977;
+}
+/* ============================================================
+   CHAT MASTER - ALTEZZA FISSA + SCROLL
+============================================================ */
+
+.master-chat-panel {
+    height: 430px;
+    max-height: 430px;
+
+    min-height: 0;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.master-chat-messages {
+    flex: 1 1 auto;
+
+    min-height: 0;
+    max-height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+}
+
+.master-chat-message {
+    flex: 0 0 auto;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.master-chat-form {
+    flex: 0 0 auto;
+}
+
+/* ============================================================
+   DASHBOARD MASTER - LAYOUT v6
+   Schema:
+   1 Chat | 3 Mappa | 4 Password Boss
+   2 PG   |         | 5 Dito di Scimmia
+                    | 6 Combattimenti
+   ============================================================ */
+
+.master-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.master-header {
+    width: 100%;
+    max-width: none;
+    min-height: 58px;
+    margin: 0 auto 10px;
+    padding: 0 4px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.master-header-title {
+    min-width: 0;
+}
+
+.master-header-title h1 {
+    margin: 2px 0 0;
+    font-size: clamp(1rem, 1.55vw, 1.45rem);
+    line-height: 1.1;
+}
+
+.master-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.master-header-actions .button {
+    white-space: nowrap;
+}
+
+.master-layout {
+    width: 100%;
+    max-width: none;
+    height: calc(100vh - 80px);
+    min-height: 650px;
+    margin: 0;
+    display: grid;
+    grid-template-columns:
+        minmax(230px, 0.78fr)
+        minmax(520px, 2.15fr)
+        minmax(250px, 0.82fr);
+    gap: 10px;
+    align-items: stretch;
+}
+
+.master-left-column,
+.master-right-column {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.master-left-column {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.master-right-column {
+    grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.master-dashboard-panel {
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    overflow: hidden;
+}
+
+.master-chat-panel,
+.master-players-panel,
+.master-combats-panel,
+.master-info-panel {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid rgba(184, 138, 59, 0.38);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(0, 0, 0, 0.22)
+        );
+}
+
+.master-chat-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: none;
+}
+
+.master-chat-header,
+.master-panel-header {
+    padding: 11px 12px;
+}
+
+.master-panel-header.compact {
+    padding-bottom: 8px;
+}
+
+.master-chat-header h2,
+.master-panel-header h2 {
+    margin: 3px 0 4px;
+    font-size: 0.92rem;
+}
+
+.master-chat-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.master-chat-form {
+    flex: 0 0 auto;
+    padding: 8px 10px 10px;
+}
+
+.master-chat-input {
+    min-height: 48px;
+    max-height: 78px;
+    resize: vertical;
+}
+
+.master-players-panel,
+.master-combats-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.master-player-list,
+.master-combat-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.master-player-item {
+    padding: 7px;
+    margin-bottom: 6px;
+}
+
+.master-player-item img {
+    width: 36px;
+    height: 36px;
+}
+
+.master-map-column {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.master-map-legend {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 8px;
+    padding: 7px 10px;
+}
+
+.master-map {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#master-map-image {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.master-message {
+    flex: 0 0 auto;
+    margin-top: 6px;
+    min-height: 18px;
+    font-size: 0.72rem;
+}
+
+.master-special-value {
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.master-special-value strong {
+    display: block;
+    font-size: clamp(1rem, 1.35vw, 1.35rem);
+    color: #e0b85d;
+    overflow-wrap: anywhere;
+}
+
+.master-special-value span {
+    display: block;
+    font-size: 0.69rem;
+    line-height: 1.35;
+    opacity: 0.68;
+}
+
+.master-boss-password-panel .master-special-value strong {
+    letter-spacing: 0.08em;
+}
+
+.master-monkey-finger-panel.is-available {
+    border-color: rgba(100, 210, 125, 0.48);
+}
+
+.master-monkey-finger-panel.is-available .master-special-value strong {
+    color: #82eba0;
+}
+
+.master-monkey-finger-panel.is-owned {
+    border-color: rgba(255, 217, 119, 0.48);
+}
+
+.master-monkey-finger-panel.is-owned .master-special-value strong {
+    color: #ffd977;
+}
+
+.master-combats-panel {
+    height: 100%;
+}
+
+.master-combat-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+    .master-layout {
+        height: auto;
+        min-height: 0;
+        grid-template-columns: minmax(220px, 0.85fr) minmax(0, 2fr);
+        grid-template-areas:
+            "left map"
+            "right map";
+        align-items: start;
+    }
+
+    .master-left-column {
+        grid-area: left;
+        height: 720px;
+    }
+
+    .master-map-column {
+        grid-area: map;
+        min-height: 720px;
+    }
+
+    .master-right-column {
+        grid-area: right;
+        grid-template-rows: auto auto minmax(260px, auto);
+    }
+}
+
+/* Telefono */
+@media (max-width: 760px) {
+    .master-page {
+        padding: 8px;
+    }
+
+    .master-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .master-header-actions {
+        width: 100%;
+    }
+
+    .master-header-actions .button {
+        flex: 1 1 0;
+        text-align: center;
+    }
+
+    .master-layout {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .master-map-column {
+        order: 1;
+        min-height: 0;
+    }
+
+    .master-left-column {
+        order: 2;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .master-right-column {
+        order: 3;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .master-chat-panel {
+        height: 420px;
+    }
+
+    .master-players-panel {
+        max-height: 480px;
+    }
+
+    .master-combats-panel {
+        max-height: 480px;
+    }
+}
+
+
+/* ============================================================
+   DASHBOARD MASTER - SELETTORE PIANO + COOLDOWN v7
+   ============================================================ */
+
+.master-floor-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid rgba(184, 138, 59, 0.38);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.22);
+    box-sizing: border-box;
+}
+
+.master-floor-button {
+    min-height: 34px;
+    padding: 7px 13px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    color: rgba(235, 226, 207, 0.68);
+    font: inherit;
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background 0.14s ease,
+        border-color 0.14s ease,
+        color 0.14s ease;
+}
+
+.master-floor-button:hover {
+    color: #eeddb8;
+    background: rgba(184, 138, 59, 0.09);
+}
+
+.master-floor-button.is-active {
+    color: #f0dba9;
+    border-color: rgba(212, 175, 103, 0.62);
+    background:
+        linear-gradient(
+            180deg,
+            rgba(137, 99, 41, 0.35),
+            rgba(69, 48, 22, 0.34)
+        );
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 232, 178, 0.04),
+        0 0 10px rgba(184, 138, 59, 0.08);
+}
+
+.master-event-marker.is-cooldown {
+    color: #dedede !important;
+    background: rgba(55, 55, 55, 0.92) !important;
+    border-color: #999 !important;
+    filter: grayscale(0.85);
+}
+
+.master-event-marker .master-event-countdown {
+    display: block;
+    margin-top: 1px;
+    font-size: clamp(6px, 0.55vw, 10px);
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.master-event-marker.is-base-combat {
+    color: #fff;
+    background: rgba(96, 17, 17, 0.92);
+    border: 2px solid #d85656;
+    font-size: clamp(10px, 1vw, 17px);
+}
+
+.master-event-marker.is-base-combat.is-available {
+    box-shadow:
+        0 0 0 2px rgba(255, 110, 110, 0.12),
+        0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.master-map.is-base-view #master-map-image {
+    object-fit: contain;
+}
+
+@media (max-width: 900px) {
+    .master-header {
+        flex-wrap: wrap;
+    }
+
+    .master-floor-switch {
+        order: 3;
+        width: 100%;
+    }
+
+    .master-floor-button {
+        flex: 1 1 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .master-floor-switch {
+        width: 100%;
+    }
+
+    .master-floor-button {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 0.62rem;
+    }
+}
+
+
+/* ============================================================
+   CENTRO DI CONTROLLO MASTER v10
+   ============================================================ */
+.master-control-center-modal { z-index: 1400; }
+.master-control-center {
+    position: relative; z-index: 2; width: min(1180px, calc(100% - 28px));
+    max-height: calc(100vh - 28px); margin: 14px auto; overflow: hidden;
+    display: flex; flex-direction: column; box-sizing: border-box;
+    border: 1px solid rgba(184,138,59,.55); border-radius: 18px;
+    background: rgba(17,18,20,.985); box-shadow: 0 22px 75px rgba(0,0,0,.72);
+}
+.master-control-center-head { display:flex; justify-content:space-between; gap:18px; align-items:center; padding:22px 24px 16px; border-bottom:1px solid rgba(184,138,59,.22); }
+.master-control-center-head h2 { margin:4px 0 5px; font-size:1.45rem; }
+.master-control-center-head p { margin:0; opacity:.6; font-size:.78rem; }
+.master-control-tabs { display:flex; gap:6px; padding:10px 14px; overflow-x:auto; border-bottom:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.018); }
+.master-control-tab { padding:9px 12px; border:1px solid rgba(184,138,59,.24); border-radius:8px; background:rgba(0,0,0,.22); color:inherit; font:inherit; font-size:.68rem; font-weight:900; letter-spacing:.05em; cursor:pointer; white-space:nowrap; }
+.master-control-tab.is-active { border-color:rgba(212,175,103,.72); color:#f0dba9; background:rgba(137,99,41,.2); }
+.master-control-body { min-height:0; overflow:auto; padding:16px; }
+.master-control-pane { display:none; }
+.master-control-pane.is-active { display:block; }
+.master-control-summary-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-bottom:12px; }
+.master-control-card, .master-control-section { border:1px solid rgba(184,138,59,.27); border-radius:12px; background:rgba(255,255,255,.025); }
+.master-control-card { padding:14px; }
+.master-control-card strong { display:block; margin:6px 0 3px; font-size:1.25rem; color:#e0b85d; }
+.master-control-card small { display:block; opacity:.58; line-height:1.35; }
+.master-control-grid { display:grid; gap:10px; }
+.master-control-grid.two-columns { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.master-control-section { min-width:0; overflow:hidden; }
+.master-control-section-head { padding:13px 14px; border-bottom:1px solid rgba(184,138,59,.18); }
+.master-control-section-head h3 { margin:3px 0; font-size:.82rem; letter-spacing:.07em; }
+.master-control-section-head p { margin:5px 0 0; font-size:.72rem; opacity:.6; }
+.master-control-list { padding:8px; }
+.master-control-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 10px; margin-bottom:6px; border:1px solid rgba(255,255,255,.07); border-radius:9px; background:rgba(255,255,255,.025); }
+.master-control-row:last-child { margin-bottom:0; }
+.master-control-row-main { min-width:0; }
+.master-control-row strong { display:block; font-size:.78rem; }
+.master-control-row small { display:block; margin-top:3px; opacity:.57; font-size:.66rem; overflow-wrap:anywhere; }
+.master-control-state { flex:0 0 auto; font-size:.64rem; font-weight:900; color:#d9c28d; text-align:right; }
+.master-control-empty { padding:12px; opacity:.55; font-size:.72rem; }
+.master-control-feature-value { padding:18px; display:flex; flex-direction:column; gap:6px; }
+.master-control-feature-value strong { font-size:1.45rem; color:#e0b85d; letter-spacing:.07em; }
+.master-control-feature-value span { font-size:.72rem; opacity:.62; }
+.master-control-player-grid, .master-control-services-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.master-control-player-grid .master-control-row, .master-control-services-grid .master-control-row { margin:0; cursor:pointer; }
+.master-noticeboard-editor-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; padding-top:12px; }
+.master-noticeboard-editor { display:flex; flex-direction:column; gap:7px; }
+.master-noticeboard-editor > span { font-size:.7rem; font-weight:900; color:#d8b56f; letter-spacing:.06em; }
+.master-noticeboard-editor textarea { width:100%; min-height:260px; box-sizing:border-box; resize:vertical; padding:11px; border:1px solid rgba(184,138,59,.32); border-radius:9px; background:rgba(0,0,0,.28); color:inherit; font:inherit; font-size:.78rem; line-height:1.5; }
+.master-noticeboard-editor textarea:focus { outline:1px solid rgba(212,175,103,.7); }
+.master-noticeboard-actions { display:flex; justify-content:flex-end; align-items:center; gap:14px; margin-top:12px; }
+#master-noticeboard-feedback { flex:1; font-size:.72rem; opacity:.72; }
+.master-control-good { color:#82eba0 !important; }
+.master-control-warn { color:#ffd977 !important; }
+.master-control-bad { color:#ff9999 !important; }
+@media (max-width:900px){ .master-control-summary-grid{grid-template-columns:repeat(2,1fr)} .master-control-grid.two-columns,.master-control-player-grid,.master-control-services-grid{grid-template-columns:1fr} .master-noticeboard-editor-grid{grid-template-columns:1fr} }
+@media (max-width:600px){ .master-control-center{width:calc(100% - 12px); max-height:calc(100vh - 12px); margin:6px auto} .master-control-center-head{align-items:stretch; flex-direction:column; padding:18px 16px 12px} .master-control-body{padding:10px} .master-control-summary-grid{grid-template-columns:1fr 1fr} .master-header-actions{flex-wrap:wrap} }
+
+
+/* ============================================================
+   CENTRO DI CONTROLLO - FIX v13
+   ============================================================ */
+.master-control-refresh-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.master-control-refresh-status {
+    min-height: 1em;
+    font-size: 0.68rem;
+    opacity: 0.7;
+    text-align: right;
+}
+.master-control-refresh-status.is-ok { color: #82eba0; opacity: 1; }
+.master-control-refresh-status.is-error { color: #ff9999; opacity: 1; }
+.master-control-empty.is-error { color: #ffb0b0; opacity: 0.9; }
+@media (max-width: 760px) {
+    .master-control-refresh-wrap { width: 100%; justify-content: stretch; }
+    .master-control-refresh-wrap .button { flex: 0 0 auto; }
+    .master-control-refresh-status { flex: 1 1 auto; text-align: left; }
+}
+/* ============================================================
+   MASTER v14 — NUOVO PANNELLO A TRE COLONNE
+   Le regole storiche di mappa, tooltip, scheda e statistiche
+   rimangono invariate. Le nuove classi fanno override in coda.
+   ============================================================ */
+.master-page-redesigned {
+    width:100%; height:100vh; min-height:560px;
+    padding:12px; overflow:hidden; box-sizing:border-box;
+}
+.master-page-redesigned .master-layout {
+    display:grid; width:100%; height:100%; max-width:none;
+    grid-template-columns:clamp(165px, 15vw, 245px) minmax(0,1fr) clamp(260px, 22vw, 360px);
+    align-items:stretch; gap:12px; min-height:0; margin:0;
+}
+.master-navigation,.master-main-column,.master-right-column {
+    min-width:0; min-height:0;
+}
+.master-navigation {
+    display:flex; flex-direction:column; overflow:hidden;
+    background:linear-gradient(160deg,rgba(37,33,27,.97),rgba(16,17,20,.96));
+    border:1px solid rgba(184,138,59,.45); border-radius:13px;
+}
+.master-navigation-brand {
+    padding:18px 14px 14px; border-bottom:1px solid rgba(184,138,59,.25);
+}
+.master-navigation-brand h1 {margin:7px 0 0; font-size:clamp(.88rem,1.1vw,1.15rem);line-height:1.25;}
+.master-navigation .master-control-tabs {
+    display:flex; padding:10px 8px; border:0; background:none;
+    flex:1 1 auto; flex-direction:column; gap:7px; overflow-y:auto; overflow-x:hidden;
+}
+.master-navigation .master-control-tab {
+    display:block; text-align:left; width:100%; padding:13px 11px;
+    border-radius:8px; white-space:normal;
+    font-size:clamp(.66rem,.9vw,.8rem); letter-spacing:.015em; line-height:1.3;
+}
+.master-navigation .master-control-tab.is-active {
+    box-shadow:inset 3px 0 0 #d5af66;
+}
+.master-navigation-foot {
+    padding:11px; opacity:.5; font-size:.65rem;
+    border-top:1px solid rgba(184,138,59,.15);
+}
+.master-main-column {display:flex; flex-direction:column;}
+.master-page-redesigned .master-control-center-inline {
+    position:relative; z-index:auto;
+    width:100%; max-width:none; height:100%; max-height:none; min-height:0; margin:0;
+    overflow:hidden; display:flex; flex-direction:column;
+    border-radius:13px;
+}
+.master-page-redesigned .master-control-center-head {padding:14px 17px; align-items:center; flex-wrap:wrap;}
+.master-page-redesigned .master-control-center-head h2 {font-size:1.22rem; margin:5px 0 3px;}
+.master-page-redesigned .master-control-center-head p {max-width:620px;}
+.master-page-redesigned .master-control-body {
+    padding:14px; flex:1 1 auto; min-height:0;
+    overflow-y:auto; overscroll-behavior:contain;
+}
+.master-page-redesigned .master-control-pane {min-height:100%;}
+.master-page-redesigned .master-important-states {margin-bottom:12px;}
+.master-page-redesigned .master-info-panel {overflow:hidden; height:auto;max-height:none;}
+.master-page-redesigned .master-info-panel .master-special-value {padding:9px 12px 12px;}
+.master-page-redesigned .master-control-summary-grid {grid-template-columns:repeat(4,minmax(0,1fr));}
+.master-page-redesigned .master-right-column {
+    display:grid; height:100%; grid-template-rows:auto minmax(170px, .95fr) minmax(235px, 1.2fr);
+    gap:10px; overflow:hidden;
+}
+.master-page-redesigned .master-right-actions {
+    display:grid; grid-template-columns:1fr 1fr;gap:9px; align-items:stretch;
+}
+.master-page-redesigned .master-right-actions .button {
+    display:flex; align-items:center; justify-content:center; min-height:40px;
+    text-align:center; box-sizing:border-box;
+}
+.master-page-redesigned .master-players-panel,
+.master-page-redesigned .master-chat-panel {
+    display:flex; flex-direction:column; min-width:0; min-height:0;
+    width:100%; height:100%; max-height:none; overflow:hidden; border-radius:12px;
+}
+.master-page-redesigned .master-players-panel .master-player-list {display:block; min-height:0; overflow:auto; flex:1 1 auto;}
+.master-page-redesigned .master-player-item {width:100%;display:flex;align-items:center;padding:7px;gap:8px;}
+.master-page-redesigned .master-player-item .master-player-info {flex:1 1 auto;}
+.master-page-redesigned .master-player-item img {width:34px; height:34px;}
+.master-page-redesigned .master-player-position {opacity:.82;line-height:1.35;}
+.master-page-redesigned .master-player-score {font-size:.64rem;}
+.master-page-redesigned .master-status-badge.floor {
+    color:#e4c992; background:rgba(184,138,59,.15);
+}
+.master-page-redesigned .master-chat-header,
+.master-page-redesigned .master-panel-header {padding:10px 12px;}
+.master-page-redesigned .master-chat-messages {flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;}
+.master-page-redesigned .master-chat-form {flex:0 0 auto; padding:9px 10px;}
+.master-page-redesigned .master-chat-input {min-height:44px;max-height:75px;}
+.master-chat-destination-label {margin-top:7px;}
+.master-chat-destination {
+    width:100%; min-height:32px; padding:5px 8px; box-sizing:border-box;
+    color:inherit; border:1px solid rgba(184,138,59,.36);border-radius:8px;
+    background:#242324;font:inherit;font-size:.78rem;
+}
+.master-chat-location {color:#d7be86; font-weight:700;font-size:.62rem;}
+.master-chat-presence {opacity:.7;font-size:.59rem;}
+.master-chat-presence.is-online {color:#82eba0;opacity:1;}
+.master-chat-meta {flex-wrap:wrap; justify-content:flex-start;align-items:center;gap:5px 8px;}
+.master-chat-meta .master-chat-clock {margin-left:auto;}
+.master-chat-body {font-size:.77rem;line-height:1.4;}
+.master-combat-extra {margin-top:14px;}
+.master-combats-panel {min-height:230px; max-height:360px;}
+.master-control-pane[data-master-control-pane="combats"] .master-combat-list {max-height:270px;overflow-y:auto;}
+.master-events-head {display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.master-events-head h3 {margin:6px 0 0;font-size:1.05rem;}
+.master-page-redesigned .master-events-pane .master-map-column {width:100%;height:auto;min-height:0; display:flex;flex-direction:column;}
+.master-page-redesigned .master-events-pane .master-map {width:100%;height:auto;min-height:300px;aspect-ratio:1/1; flex:none;}
+.master-page-redesigned .master-events-pane #master-map-image {max-width:100%;max-height:100%;width:auto;height:auto;}
+.master-page-redesigned .master-map-legend {max-width:none;flex-wrap:wrap;}
+.master-page-redesigned .master-floor-switch {order:0;width:auto;}
+/* Caricamenti e modali legacy non devono alterare la pagina fissa */
+.master-page-redesigned .master-control-pane[hidden] {display:none;}
+@media(max-width:1200px) {
+    .master-page-redesigned .master-layout {grid-template-columns:155px minmax(0,1fr) 255px;gap:8px;}
+    .master-page-redesigned .master-control-summary-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+    .master-page-redesigned .master-control-grid.two-columns {grid-template-columns:1fr;}
+}
+@media(max-width:900px) {
+    .master-page-redesigned {height:auto;min-height:100vh;overflow:visible;padding:9px;}
+    .master-page-redesigned .master-layout {
+        height:auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);
+        grid-template-areas:"nav" "main" "right";
+    }
+    .master-navigation {grid-area:nav;}
+    .master-main-column {grid-area:main;min-height:460px;}
+    .master-page-redesigned .master-right-column {grid-area:right;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto minmax(360px,auto);height:auto;overflow:visible;}
+    .master-page-redesigned .master-right-actions {grid-column:1/-1; grid-row:1;justify-self:end;width:min(330px,100%);}
+    .master-page-redesigned .master-control-center-inline {max-height:none; min-height:460px;}
+    .master-page-redesigned .master-control-body {overflow:visible;}
+    .master-navigation .master-control-tabs {flex-direction:row; flex-wrap:wrap; overflow:visible;justify-content:flex-start;}
+    .master-navigation .master-control-tab {width:auto; flex:1 1 130px; text-align:center; padding:10px;}
+    .master-navigation-foot {display:none;}
+    .master-navigation-brand {padding:11px 13px;}
+    .master-page-redesigned .master-players-panel,.master-page-redesigned .master-chat-panel {height:420px;max-height:420px;}
+}
+@media(max-width:600px) {
+    .master-page-redesigned .master-layout {display:grid;grid-template-columns:minmax(0,1fr);}
+    .master-page-redesigned .master-right-column {display:flex;flex-direction:column;}
+    .master-page-redesigned .master-players-panel {height:350px;}
+    .master-page-redesigned .master-chat-panel {height:445px;}
+    .master-page-redesigned .master-control-center-head {padding:13px;}
+    .master-page-redesigned .master-control-body {padding:10px;}
+    .master-page-redesigned .master-control-summary-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+    .master-page-redesigned .master-control-grid.two-columns {grid-template-columns:1fr;}
+    .master-page-redesigned .master-control-player-grid,.master-page-redesigned .master-control-services-grid {grid-template-columns:1fr;}
+    .master-page-redesigned .master-events-head {align-items:stretch;}
+    .master-page-redesigned .master-floor-switch {width:100%;}
+    .master-page-redesigned .master-events-pane .master-map {min-height:260px;}
+}
+/* I pulsanti del roster ereditano esplicitamente il tema scuro. */
+.master-page-redesigned button.master-control-row {
+    color:inherit; font:inherit; text-align:left; cursor:pointer;
+}
+.master-page-redesigned button.master-control-row:hover {
+    background:rgba(184,138,59,.12);
+    border-color:rgba(184,138,59,.55);
+}
+.master-page-redesigned button.master-control-row:focus-visible,
+.master-page-redesigned .master-player-item:focus-visible {
+    outline:2px solid #d5af66; outline-offset:2px;
+}
+
+/* ============================================================
+   MASTER v15 — PANORAMICA CON MAPPE A SLIDER
+   ============================================================ */
+.master-page-redesigned .master-control-pane[data-master-control-pane="overview"] {
+    height: 100%;
+    overflow: hidden;
+}
+
+.master-overview-shell {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+}
+
+.master-overview-summary-grid {
+    margin-bottom: 0;
+}
+
+.master-overview-main {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(290px, .8fr);
+    gap: 12px;
+}
+
+.master-overview-map-card,
+.master-overview-side {
+    min-height: 0;
+}
+
+.master-overview-map-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.master-overview-map-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.master-overview-map-toolbar h3 {
+    margin: 4px 0 2px;
+    font-size: 1.12rem;
+}
+
+.master-overview-map-toolbar p {
+    margin: 0;
+    font-size: 0.78rem;
+    opacity: 0.7;
+}
+
+.master-overview-slider {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+
+.master-overview-slide-button {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(184, 138, 59, 0.4);
+    background: rgba(255,255,255,0.05);
+    color: inherit;
+    font: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.master-overview-slide-button:hover {
+    border-color: rgba(213, 175, 102, 0.75);
+    background: rgba(213,175,102,0.12);
+}
+
+.master-overview-slide-count {
+    min-width: 52px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #d9c08d;
+}
+
+.master-overview-map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    font-size: 0.7rem;
+    opacity: 0.92;
+}
+
+.master-overview-map {
+    position: relative;
+    min-height: 0;
+    height: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(184, 138, 59, 0.28);
+    background: rgba(0,0,0,0.18);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.master-overview-map img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.master-overview-token,
+.master-overview-marker {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+}
+
+.master-overview-token {
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.8));
+    z-index: 4;
+}
+
+.master-overview-token.is-offline {
+    filter: grayscale(1) brightness(.82) drop-shadow(0 2px 4px rgba(0,0,0,.8));
+    opacity: .88;
+}
+
+.master-overview-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 2px;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0,0,0,.75);
+    pointer-events: auto;
+}
+
+.master-overview-marker .icon {
+    line-height: 1;
+    font-size: clamp(10px, .92vw, 18px);
+}
+
+.master-overview-marker .timer {
+    line-height: 1;
+    white-space: nowrap;
+    font-size: clamp(6px, .48vw, 10px);
+    font-weight: 700;
+}
+
+.master-overview-marker.state-active {
+    color: #ffffff;
+    background: rgba(27, 126, 61, 0.92);
+    border-color: #73d79a;
+}
+
+.master-overview-marker.state-live {
+    color: #ffffff;
+    background: rgba(152, 31, 31, 0.94);
+    border-color: #ff8686;
+}
+
+.master-overview-marker.state-cooldown,
+.master-overview-marker.state-inactive {
+    color: #e1e1e1;
+    background: rgba(73, 73, 73, 0.92);
+    border-color: #9a9a9a;
+}
+
+.master-overview-marker.state-building {
+    color: #212121;
+    background: rgba(247, 214, 96, 0.96);
+    border-color: #fff0a8;
+}
+
+.master-overview-marker.state-disabled {
+    color: #ffffff;
+    background: rgba(117, 23, 23, 0.95);
+    border-color: #ff7d7d;
+}
+
+.master-overview-side {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+}
+
+.master-overview-specials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.master-overview-status-grid {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.master-overview-status-grid .master-control-section {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 0;
+}
+
+.master-overview-status-grid .master-control-section-head.compact,
+.master-panel-header.compact {
+    padding: 10px 12px;
+}
+
+.master-overview-status-list {
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px;
+}
+
+.master-overview-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 9px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.035);
+}
+
+.master-overview-row-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .92rem;
+    font-weight: 800;
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 2px 6px rgba(0,0,0,.42);
+}
+
+.master-overview-row-icon.state-active { background: rgba(27,126,61,.92); color:#fff; }
+.master-overview-row-icon.state-live { background: rgba(152,31,31,.94); color:#fff; }
+.master-overview-row-icon.state-cooldown,
+.master-overview-row-icon.state-inactive { background: rgba(73,73,73,.92); color:#e1e1e1; }
+.master-overview-row-icon.state-building { background: rgba(247,214,96,.96); color:#212121; }
+.master-overview-row-icon.state-disabled { background: rgba(117,23,23,.95); color:#fff; }
+
+.master-overview-row-main {
+    min-width: 0;
+}
+
+.master-overview-row-main strong,
+.master-overview-row-main small {
+    display: block;
+}
+
+.master-overview-row-main strong {
+    font-size: 0.78rem;
+}
+
+.master-overview-row-main small {
+    font-size: 0.67rem;
+    opacity: .72;
+    line-height: 1.35;
+}
+
+.master-overview-row-time {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #d8c18e;
+    white-space: nowrap;
+}
+
+@media (max-width: 1300px) {
+    .master-overview-main {
+        grid-template-columns: 1fr;
+    }
+    .master-overview-map-card {
+        min-height: 340px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .master-overview-status-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .master-overview-map-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .master-overview-slider {
+        align-self: flex-end;
+    }
+    .master-overview-specials,
+    .master-overview-status-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   MASTER v16 — SCHEDA PG CONSULTAZIONE + AMMINISTRAZIONE
+   ============================================================ */
+.master-page-redesigned .master-players-view {height:100%;min-height:0;display:none;overflow:hidden;flex-direction:column}
+.master-page-redesigned .master-players-view.is-active {display:flex}
+.master-pg-toolbar {flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 12px;border-bottom:1px solid rgba(184,138,59,.3)}
+.master-pg-toolbar h3 {margin:5px 0 0;font-size:1rem}
+.master-pg-toolbar button[hidden], .master-pg-sheet[hidden], .master-pg-browser[hidden]{display:none!important}
+.master-pg-search-label {display:block;font-size:.75rem;margin:12px 0 6px;color:#dbc38e}
+#master-pg-search {width:100%;padding:10px 12px;border:1px solid rgba(184,138,59,.4);border-radius:9px;background:#191a1b;color:inherit;font:inherit}
+#master-pg-browser {min-height:0;overflow:auto;flex:1 1 auto}
+.master-pg-list {display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;padding:10px 2px}
+.master-pg-entry {width:100%;display:flex;align-items:center;gap:12px;border:1px solid rgba(184,138,59,.3);background:rgba(255,255,255,.035);color:inherit;border-radius:11px;padding:11px;text-align:left;cursor:pointer}
+.master-pg-entry:hover,.master-pg-entry:focus-visible{border-color:#d7b16a;background:rgba(184,138,59,.1)}
+.master-pg-entry img{width:49px;height:49px;object-fit:contain}
+.master-pg-entry.is-offline img{filter:grayscale(1);opacity:.7}
+.master-pg-entry strong{display:block;font-size:.91rem}
+.master-pg-entry small{display:block;font-size:.72rem;opacity:.7;margin-top:4px}
+.master-pg-dot{color:#777}.master-pg-dot.is-online{color:#71d991}
+.master-pg-sheet {min-height:0;flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:14px 3px 24px}
+.master-pg-sheet h3{margin:0 0 10px;font-size:.87rem;color:#e8cb88;text-transform:uppercase;letter-spacing:.05em}
+.master-pg-identity {display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin:0 0 16px;padding:16px;border:1px solid rgba(184,138,59,.3);border-radius:13px;background:rgba(184,138,59,.04)}
+.master-pg-identity img{width:90px;height:90px;object-fit:contain}
+.master-pg-identity h2{margin:0 0 5px;font-size:1.5rem}
+.master-pg-identity p{margin:3px 0;font-size:.8rem;opacity:.8}
+.master-pg-section{border:1px solid rgba(184,138,59,.25);border-radius:12px;padding:13px;margin-bottom:13px;background:rgba(255,255,255,.02)}
+.master-pg-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.master-pg-stat{border:1px solid rgba(184,138,59,.22);border-radius:9px;padding:9px;background:rgba(0,0,0,.16);min-width:0}
+.master-pg-stat span{display:block;font-size:.67rem;opacity:.68;overflow-wrap:anywhere}
+.master-pg-stat strong{display:block;color:#e5bd70;font-size:1.1rem;margin-top:4px;overflow-wrap:anywhere}
+.master-pg-edit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:9px}
+.master-pg-edit-field{display:flex;flex-direction:column;gap:5px;font-size:.74rem;color:#d9cba9}
+.master-pg-edit-field input,.master-pg-inventory select{width:100%;max-width:100%;padding:8px;border-radius:7px;background:#1b1c1d;border:1px solid rgba(184,138,59,.42);color:#f1e8d6;font:inherit}
+.master-pg-edit-field input:focus-visible,.master-pg-inventory select:focus-visible{outline:2px solid #d7ad58}
+.master-pg-form-actions{margin:14px 0 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.master-pg-feedback{font-size:.76rem;opacity:.85;overflow-wrap:anywhere}
+.master-pg-feedback.error{color:#ffaaaa}.master-pg-feedback.ok{color:#8ceca6}
+.master-pg-inventory{display:grid;gap:8px}
+.master-pg-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px;border:1px solid rgba(255,255,255,.08);border-radius:9px}
+.master-pg-item strong{font-size:.8rem}.master-pg-item small{display:block;opacity:.7;font-size:.69rem;margin-top:3px;line-height:1.35}
+.master-pg-item-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.master-pg-item-actions input{width:62px;background:#191919;border:1px solid rgba(184,138,59,.4);color:inherit;border-radius:6px;padding:6px}
+.master-pg-item-actions button{font-size:.7rem;padding:7px}
+.master-pg-inventory select{min-width:130px}
+.master-pg-empty{color:#c7b8a2;opacity:.74;font-size:.78rem;padding:8px 0}
+.master-pg-loading{padding:16px;color:#d5c7a9}
+@media(max-width:700px){.master-pg-item{grid-template-columns:1fr}.master-pg-identity img{width:70px;height:70px}}
+/* ============================================================
+   MASTER v17 — PANORAMICA ESSENZIALE
+   Solo mappa e selettore; status negli altri tab.
+   ============================================================ */
+.master-page-redesigned.master-overview-active .master-control-center-head {
+    display: none;
+}
+.master-page-redesigned.master-overview-active .master-control-body {
+    overflow: hidden;
+    padding: 0;
+}
+.master-page-redesigned .master-control-pane[data-master-control-pane="overview"],
+.master-page-redesigned .master-control-pane[data-master-control-pane="overview"].is-active {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+.master-page-redesigned .master-overview-clean {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    min-height: 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.master-page-redesigned .master-overview-clean > .master-overview-map-toolbar {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 1px 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border: 0;
+}
+.master-overview-clean .master-overview-floor-name {
+    font-size: clamp(.79rem, 1.05vw, .97rem);
+    line-height: 1.2;
+    color: #e9cf98;
+    letter-spacing: .07em;
+    font-weight: 800;
+}
+.master-overview-clean .master-overview-slider {display: inline-flex; align-items: center; flex:0 0 auto; gap: 7px}
+.master-overview-clean .master-overview-slide-button {width: 32px; height: 31px; padding: 0; font-size: 1.22rem}
+.master-overview-clean .master-overview-slide-count {min-width: 43px; font-size: .72rem}
+.master-page-redesigned .master-overview-clean > .master-overview-map {
+    box-sizing: border-box;
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    height: 0; /* flex uses all remaining available height */
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(184,138,59,.25);
+    border-radius: 9px;
+    background: rgba(0,0,0,.15);
+    overflow: hidden;
+}
+.master-page-redesigned .master-overview-clean .master-overview-map img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    flex: 0 1 auto;
+}
+/* La geometria dell'indicatore si riferisce solo al cerchio:
+   il countdown è posizionato SOTTO, non nel simbolo. */
+.master-page-redesigned .master-overview-marker {
+    display: block;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible;
+    min-height: 0;
+    transform: translate(-50%, -50%);
+}
+.master-page-redesigned .master-overview-marker > .icon {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: 1.5px solid rgba(255,255,255,.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 1;
+    font-size: clamp(11px, 1vw, 17px);
+    box-shadow: 0 2px 8px rgba(0,0,0,.78);
+}
+.master-page-redesigned .master-overview-marker.state-active > .icon {
+    background: rgba(30,120,65,.96); border-color: #76dca0;
+}
+.master-page-redesigned .master-overview-marker.state-live > .icon {
+    background: rgba(152,31,31,.96); border-color: #ff9393;
+}
+.master-page-redesigned .master-overview-marker.state-cooldown > .icon,
+.master-page-redesigned .master-overview-marker.state-inactive > .icon {
+    background: rgba(75,75,75,.95); border-color: #b1b1b1;
+    filter: grayscale(1);
+}
+.master-page-redesigned .master-overview-marker.state-building > .icon {
+    background: rgba(247,214,96,.98); border-color: #ffeb9b;
+}
+.master-page-redesigned .master-overview-marker.state-disabled > .icon {
+    background: rgba(128,28,28,.96); border-color: #ff7878;
+}
+.master-page-redesigned .master-overview-marker > .timer {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 2px);
+    display: block;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 2px 3px;
+    width: max-content;
+    max-width: 90px;
+    color: #ffe6a6;
+    font-size: clamp(7px, .7vw, 10px);
+    line-height: 1.05;
+    font-weight: 900;
+    background: rgba(10,10,10,.85);
+    border: 1px solid rgba(220,185,100,.32);
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,.9);
+    pointer-events: none;
+}
+.master-page-redesigned .master-overview-marker.state-cooldown > .timer {
+    color: #eee;
+    border-color: rgba(180,180,180,.35);
+}
+.master-page-redesigned .master-overview-token {
+    cursor: pointer;
+    object-fit: contain;
+    border: 0;
+    transform: translate(-50%, -50%);
+}
+.master-page-redesigned .master-overview-token.is-online {
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,.9));
+    opacity: 1;
+}
+.master-page-redesigned .master-overview-token.is-offline {
+    filter: grayscale(1) brightness(.85) drop-shadow(0 1px 3px rgba(0,0,0,.9));
+    opacity: .7;
+}
+/* Dati operativi spostati da Panoramica nel tab Eventi/Segreti. */
+.master-page-redesigned .master-events-extra-status {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+.master-page-redesigned .master-events-extra-status > .master-info-panel {min-width:0; max-height:none}
+@media(max-width:850px) {
+    .master-page-redesigned .master-overview-clean {min-height:390px}
+    .master-page-redesigned .master-overview-clean > .master-overview-map {height:390px; flex-basis:390px}
+}
+@media(max-width:520px) {
+    .master-page-redesigned .master-events-extra-status {grid-template-columns:1fr}
+}
+
+/* ============================================================
+   MASTER v20 — GESTIONE VENDOR / SERVIZI
+   ============================================================ */
+.master-services-pane .master-services-heading {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+    margin-bottom:7px;
+}
+.master-services-pane .master-services-heading h3 { margin:5px 0 7px; }
+.master-services-pane .master-services-heading p {
+    max-width:750px;
+    line-height:1.5;
+    font-size:.78rem;
+    margin:0;
+    opacity:.82;
+}
+.master-services-pane #master-services-refresh {
+    flex:0 0 auto;
+    min-height:35px;
+    font-size:.72rem;
+}
+.master-services-feedback {
+    min-height:1.35rem;
+    margin:6px 0;
+    font-size:.78rem;
+    line-height:1.4;
+}
+.master-services-feedback.is-success { color:#92dfb0; }
+.master-services-feedback.is-error { color:#ff9393; }
+.master-page-redesigned #master-control-services.master-control-services-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:13px;
+    align-items:start;
+    padding-bottom:10px;
+}
+.master-service-card {
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    border-radius:13px;
+    background:linear-gradient(160deg,rgba(36,35,34,.96),rgba(17,19,22,.96));
+    border:1px solid rgba(184,138,59,.34);
+}
+.master-service-card.is-active { border-color:rgba(85,190,118,.42); }
+.master-service-card.is-building { border-color:rgba(232,186,72,.52); }
+.master-service-card.is-unbuilt { border-color:rgba(225,96,96,.31); }
+.master-service-card-head {
+    display:flex;
+    justify-content:space-between;
+    gap:14px;
+    padding:14px;
+    border-bottom:1px solid rgba(184,138,59,.18);
+}
+.master-service-identity { flex:1 1 auto; min-width:0; }
+.master-service-headline { display:flex;gap:9px;align-items:center;flex-wrap:wrap; }
+.master-service-name { margin:0; font-size:1rem; }
+.master-service-level {
+    display:inline-flex;align-items:center;
+    background:rgba(188,137,53,.16);
+    color:#e9c78a;border-radius:6px;
+    border:1px solid rgba(188,137,53,.3);
+    font-size:.68rem;font-weight:800;
+    padding:3px 7px;white-space:nowrap;
+}
+.master-service-state-label {
+    display:inline-block;margin-top:9px;font-size:.65rem;
+    font-weight:800;letter-spacing:.055em;
+}
+.master-service-state-label.is-active { color:#7ce5a0; }
+.master-service-state-label.is-building { color:#f3d37a; }
+.master-service-state-label.is-unbuilt { color:#f6aaaa; }
+.master-service-state-controls { flex:0 0 175px;min-width:0; }
+.master-service-slider-caption {
+    display:block; font-size:.66rem; font-weight:700;
+    opacity:.84; margin-bottom:5px;
+}
+.master-service-state-slider { width:100%; cursor:pointer; accent-color:#d5af66; }
+.master-service-slider-labels {
+    display:flex;justify-content:space-between;gap:2px;
+    font-size:.56rem;font-weight:700;color:#ccb78a;
+}
+.master-service-card-body {display:flex;flex-direction:column;gap:13px;padding:13px;}
+.master-service-time-box {
+    padding:10px 12px;
+    background:rgba(8,9,11,.45);
+    border-radius:9px;
+    border:1px solid rgba(184,138,59,.2);
+}
+.master-service-time-box.is-active { border-color:rgba(102,213,143,.37); }
+.master-service-time-box.is-building { border-color:rgba(245,192,78,.37); }
+.master-service-time-caption {
+    display:block;font-size:.65rem;font-weight:700;opacity:.8;
+    margin-bottom:3px;
+}
+.master-service-time-value {
+    display:block;
+    font-size:1.23rem;
+    color:#e8c277;
+    font-variant-numeric:tabular-nums;
+}
+.master-service-time-box.is-active .master-service-time-value { color:#91e7b3; }
+.master-service-requirements {
+    display:flex;flex-direction:column;gap:9px;
+}
+.master-service-requirements-title {
+    color:#dfc18c;font-weight:800;font-size:.67rem;letter-spacing:.045em;
+    border-bottom:1px solid rgba(184,138,59,.2);padding-bottom:6px;
+}
+.master-service-resource-row {display:flex;flex-direction:column;gap:5px;}
+.master-service-resource-heading {
+    display:flex;justify-content:space-between;gap:10px;
+    align-items:center;font-size:.77rem;
+}
+.master-service-resource-name {overflow-wrap:anywhere;}
+.master-service-resource-count {font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.master-service-resource-progress {
+    width:100%;height:8px;overflow:hidden;
+    border:0;border-radius:999px;accent-color:#bd9447;
+}
+.master-service-resource-controls {display:flex;gap:6px;align-items:center;}
+.master-service-resource-amount,
+.master-service-gold-input {
+    min-width:0;width:70px;
+    background:rgba(0,0,0,.35);
+    color:inherit;border-radius:7px;
+    border:1px solid rgba(184,138,59,.45);
+    padding:7px;font:inherit;font-size:.77rem;
+    box-sizing:border-box;
+}
+.master-service-quantity-button {flex:1 1 0;min-width:0;font-size:.64rem;padding:7px 5px;white-space:nowrap;}
+.master-service-resource-controls button:disabled {opacity:.35;cursor:not-allowed;}
+.master-service-gold-box {
+    padding:11px;
+    display:flex;flex-direction:column;gap:8px;
+    background:rgba(69,94,55,.12);
+    border:1px solid rgba(127,207,139,.31);
+    border-radius:10px;
+}
+.master-service-gold-heading {font-size:.72rem;color:#9ceab8;}
+.master-service-muted {font-size:.72rem;opacity:.75;line-height:1.4;}
+.master-service-gold-controls {display:flex;gap:8px;align-items:center;}
+.master-service-gold-input {flex:1 1 auto;width:100px;}
+.master-service-gold-add {flex:0 0 auto;font-size:.67rem;white-space:nowrap;padding:9px;}
+.master-service-note {
+    font-size:.72rem;opacity:.68;line-height:1.5;
+    padding:9px;
+    border:1px dashed rgba(184,138,59,.24);
+    border-radius:8px;
+}
+#master-control-services.is-saving { opacity:.55;pointer-events:none; }
+@media (max-width:1440px) {
+    .master-page-redesigned #master-control-services.master-control-services-grid {grid-template-columns:1fr;}
+}
+@media (max-width:580px) {
+    .master-service-card-head {flex-direction:column;}
+    .master-service-state-controls {flex-basis:auto; width:100%;}
+    .master-services-pane .master-services-heading {flex-direction:column;}
+}
+
+/* ============================================================
+   MASTER v21 — GESTIONE COMBATTIMENTI
+   ============================================================ */
+.master-page-redesigned .master-combats-management-pane {
+    min-width:0;
+    min-height:0;
+}
+.master-combat-manage-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin:0 0 13px;
+}
+.master-combat-manage-header h3 {
+    margin:6px 0 4px;
+    font-size:1.05rem;
+}
+.master-combat-manage-header p {
+    margin:0;
+    opacity:.7;
+    line-height:1.4;
+    font-size:.78rem;
+}
+.master-combat-manage-header .button {flex:0 0 auto;font-size:.72rem;white-space:nowrap;}
+.master-combats-feedback {
+    min-height:0;
+    font-size:.75rem;
+    color:#cdb886;
+    margin-bottom:8px;
+}
+.master-combats-feedback.is-error {color:#ff9999;}
+.master-combats-overview {display:flex;flex-direction:column;gap:17px;min-width:0;}
+.master-combat-group {min-width:0;}
+.master-combat-group-title {
+    margin:0 0 10px;
+    padding:0 0 9px;
+    border-bottom:1px solid rgba(184,138,59,.3);
+    color:#e5c88b;
+    font-size:.81rem;
+    font-weight:800;
+    letter-spacing:.075em;
+}
+.master-combat-manage-grid {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+    min-width:0;
+}
+.master-combat-manage-card {
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    border:1px solid rgba(184,138,59,.34);
+    border-radius:12px;
+    background:linear-gradient(145deg,rgba(27,28,31,.98),rgba(18,19,22,.96));
+    overflow:hidden;
+}
+.master-combat-manage-card.state-in_progress {border-color:rgba(236,144,76,.7);}
+.master-combat-manage-card.state-cooldown {border-color:rgba(137,139,148,.46);}
+.master-combat-card-header {
+    padding:13px 14px 10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:start;
+    gap:12px;
+    border-bottom:1px solid rgba(184,138,59,.18);
+}
+.master-combat-card-header h4 {margin:0;font-size:.96rem;line-height:1.35;overflow-wrap:anywhere;}
+.master-combat-id {display:block;margin-top:3px;font-size:.64rem;opacity:.53;overflow-wrap:anywhere;}
+.master-combat-pill {
+    flex:0 0 auto;
+    font-size:.62rem;
+    font-weight:800;
+    padding:5px 9px;
+    border:1px solid rgba(255,255,255,.24);
+    border-radius:999px;
+    color:#d8dadd;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+.master-combat-pill.is-available {color:#7ce0a0;border-color:rgba(94,215,140,.5);background:rgba(44,139,71,.13);}
+.master-combat-pill.is-cooldown {color:#b4b5bd;border-color:rgba(153,156,164,.5);background:rgba(117,122,131,.12);}
+.master-combat-pill.is-in_progress {color:#ffcf83;border-color:rgba(255,190,90,.48);background:rgba(178,91,27,.15);}
+.master-combat-pill.is-special {color:#d5b2ef;border-color:rgba(175,128,220,.48);background:rgba(118,66,155,.18);}
+.master-combat-card-body {padding:12px 14px 14px;display:flex;flex-direction:column;gap:11px;flex:1 1 auto;}
+.master-combat-state-line {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:6px 12px;
+    font-size:.73rem;
+    align-items:center;
+    color:#d6d0be;
+}
+.master-combat-state-line strong {color:#e9c887;font-variant-numeric:tabular-nums;}
+.master-combat-state-line strong.is-cooldown {color:#e7b874;}
+.master-combat-state-controls {display:flex;flex-direction:column;gap:8px;}
+.master-combat-slider-row {display:flex;align-items:center;gap:11px;justify-content:space-between;}
+.master-combat-slider-label {font-size:.67rem;color:#bdb5a4;}
+.master-combat-state-slider {flex:1 1 auto;min-width:60px;max-width:145px;accent-color:#d5ad65;cursor:pointer;}
+.master-combat-state-slider:disabled {opacity:.3;cursor:not-allowed;}
+.master-combat-editor {display:flex;gap:8px;align-items:end;flex-wrap:wrap;}
+.master-combat-editor[hidden] {display:none!important;}
+.master-combat-minutes-label {display:flex;flex-direction:column;gap:5px;flex:1 1 130px;min-width:100px;font-size:.66rem;color:#cbb589;font-weight:700;}
+.master-combat-minutes-input {
+    width:100%;min-height:35px;box-sizing:border-box;
+    padding:6px 9px;
+    border-radius:7px;
+    border:1px solid rgba(184,138,59,.45);
+    background:#151619;
+    color:#fff;
+    font:inherit;
+    font-size:.84rem;
+}
+.master-combat-apply {min-height:35px;font-size:.7rem;padding:8px 12px;white-space:nowrap;}
+.master-combat-apply[hidden] {display:none!important;}
+.master-combat-players-heading {font-size:.67rem;color:#d5b678;font-weight:800;letter-spacing:.05em;}
+.master-combat-session {
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    background:rgba(0,0,0,.2);
+    border:1px solid rgba(211,154,83,.22);
+    border-radius:8px;
+    padding:10px;
+}
+.master-combat-session-header {display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.72rem;}
+.master-combat-session-header strong {color:#edbf7c;}
+.master-combat-watch {font-size:.69rem;flex:0 0 auto;white-space:nowrap;}
+.master-combat-players {display:flex;flex-wrap:wrap;gap:5px 7px;}
+.master-combat-person {
+    display:inline-flex;
+    align-items:center;
+    max-width:100%;
+    border-radius:6px;
+    padding:5px 7px;
+    font-size:.68rem;
+    overflow-wrap:anywhere;
+    border:1px solid rgba(128,171,218,.31);
+    background:rgba(64,101,153,.12);
+}
+.master-combat-players-empty {font-size:.7rem;opacity:.65;}
+.master-combat-help {font-size:.7rem;opacity:.65;line-height:1.4;}
+.master-combat-manage-card button:disabled {opacity:.55;cursor:not-allowed;}
+@media(max-width:1330px){.master-combat-manage-grid{grid-template-columns:1fr;}}
+@media(max-width:900px){.master-combat-manage-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:650px){
+    .master-combat-manage-grid{grid-template-columns:1fr;}
+    .master-combat-manage-header {align-items:stretch;flex-direction:column;}
+    .master-combat-manage-header .button{align-self:flex-start;}
+}
+
+/* ============================================================
+   MASTER v22 — EVENTI E SEGRETI
+   ============================================================ */
+.master-page-redesigned .master-events-management-pane {min-width:0;}
+.master-events-management-head {display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap;}
+.master-events-management-head h3 {margin:5px 0 4px;font-size:1.1rem;color:#f2d6a4;}
+.master-events-management-head p {margin:0;font-size:.75rem;line-height:1.45;opacity:.7;}
+.master-events-management-head .button {flex:0 0 auto;font-size:.72rem;min-height:34px;}
+.master-events-feedback {font-size:.74rem;min-height:18px;margin:0 0 8px;color:#e1bf86;}
+.master-events-feedback.is-error {color:#ff9c97;}
+.master-events-group-title {display:flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:.095em;margin:13px 0 10px;color:#e9bd78;border-bottom:1px solid rgba(211,167,84,.25);padding-bottom:7px;}
+.master-events-group-title span {font-size:.68rem;color:#c1b7a6;border:1px solid rgba(211,167,84,.25);padding:1px 6px;border-radius:10px;}
+.master-events-management-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.master-event-admin-card {position:relative;display:flex;min-width:0;flex-direction:column;gap:11px;border:1px solid rgba(201,154,83,.32);border-radius:12px;background:linear-gradient(140deg,#1c1d20,#121316);padding:14px;}
+.master-event-admin-card.is-disabled {border-color:rgba(159,162,175,.33);}
+.master-event-admin-card.is-active {border-color:rgba(100,195,138,.45);}
+.master-event-admin-header {display:flex;align-items:start;justify-content:space-between;gap:9px;}
+.master-event-admin-title {display:flex;align-items:center;gap:9px;min-width:0;}
+.master-event-admin-icon {display:flex;align-items:center;justify-content:center;flex:0 0 37px;width:37px;height:37px;border-radius:10px;background:rgba(184,138,59,.16);border:1px solid rgba(184,138,59,.23);font-size:1.2rem;}
+.master-event-admin-title strong {font-size:.9rem;display:block;line-height:1.4;}
+.master-event-admin-title small {font-size:.7rem;display:block;opacity:.62;line-height:1.35;}
+.master-event-admin-state {font-size:.65rem;border-radius:999px;border:1px solid #5a5b5f;padding:5px 8px;white-space:nowrap;color:#aeb0b5;}
+.master-event-admin-state.is-enabled {color:#8ce4a4;border-color:#477957;background:rgba(71,121,87,.12);}
+.master-event-admin-detail {font-size:.73rem;line-height:1.5;color:#c9c2b4;min-height:30px;}
+.master-event-admin-footer {display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:36px;padding-top:9px;border-top:1px solid rgba(216,172,105,.11);}
+.master-event-admin-footer > span {font-size:.7rem;color:#c6b9a3;}
+.master-event-toggle {cursor:pointer;display:inline-flex;position:relative;align-items:center;gap:9px;color:#dad2c3;font-weight:700;font-size:.7rem;user-select:none;}
+.master-event-toggle input {position:absolute;opacity:0;width:1px;height:1px;}
+.master-event-toggle-track {width:48px;height:25px;border:1px solid #6b6c70;border-radius:30px;position:relative;background:#464850;transition:background .16s ease;display:inline-block;}
+.master-event-toggle-track:before {content:"";width:17px;height:17px;position:absolute;left:3px;top:3px;background:#d2d2d5;border-radius:50%;box-shadow:0 1px 3px #0009;transition:transform .16s ease;}
+.master-event-toggle input:checked + .master-event-toggle-track {background:#29834a;border-color:#66b87e;}
+.master-event-toggle input:checked + .master-event-toggle-track:before {transform:translateX(23px);background:#f5fff6;}
+.master-event-toggle input:focus-visible + .master-event-toggle-track {outline:2px solid #ebc377;outline-offset:3px;}
+.master-event-toggle input:disabled + .master-event-toggle-track {opacity:.45;cursor:not-allowed;}
+.master-event-secrets-heading {margin-top:20px;}
+.master-event-secret-card {display:flex;gap:14px;align-items:start;border:1px solid rgba(203,160,88,.38);border-radius:12px;background:linear-gradient(140deg,#1e1d1c,#121315);padding:15px;max-width:100%;}
+.master-event-secret-icon {font-size:1.45rem;line-height:1.35;}
+.master-event-secret-copy {display:flex;flex-direction:column;gap:4px;min-width:0;}
+.master-event-secret-copy > strong {font-size:.9rem;}
+.master-event-secret-copy > span {opacity:.63;font-size:.71rem;}
+.master-event-password-readout {margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+.master-event-password-readout strong {color:#f1c575;font-size:clamp(.98rem,1.45vw,1.25rem);letter-spacing:.04em;overflow-wrap:anywhere;}
+.master-event-password-readout small {font-size:.72rem;color:#c9c0ad;}
+.master-event-finger-owners {font-weight:700;color:#edd29c;}
+.master-events-management-grid button:disabled {opacity:.5;cursor:not-allowed;}
+@media (max-width: 1300px) {.master-events-management-grid {grid-template-columns:1fr;}}
+@media (max-width: 900px) {.master-events-management-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width: 650px) {.master-events-management-grid {grid-template-columns:1fr;}}
